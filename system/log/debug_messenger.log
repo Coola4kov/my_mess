@@ -1,0 +1,313 @@
+2018-03-07 02:01:20,379 INFO       decorators Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:02:05,734 INFO       decorators Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:02:05,735 INFO       decorators Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:02:35,236 INFO       decorators Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:02:35,237 INFO       decorators Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:02:35,243 INFO       decorators Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x04F2BBB0>,), kwargs = {}
+2018-03-07 02:02:35,443 INFO       decorators Выполняется функция handle_serv_message с параметрами args = (<__main__.ClientMessageHandler object at 0x04F2BBB0>,), kwargs = {}
+2018-03-07 02:03:13,951 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:03:13,951 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:03:13,956 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x053D9C10>,), kwargs = {}
+2018-03-07 02:03:14,157 INFO      : Выполняется функция handle_serv_message с параметрами args = (<__main__.ClientMessageHandler object at 0x053D9C10>,), kwargs = {}
+2018-03-07 02:03:29,895 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:03:29,896 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:03:29,901 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05BB6FB0>,), kwargs = {}
+2018-03-07 02:03:30,102 INFO      : Выполняется функция handle_serv_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05BB6FB0>,), kwargs = {}
+2018-03-07 02:17:05,595 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:05,595 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:06,581 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:06,581 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:16,716 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:16,718 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:16,724 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05C6C070>,), kwargs = {}
+2018-03-07 02:17:17,676 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:17,677 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:17,683 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0512C070>,), kwargs = {}
+2018-03-07 02:17:18,751 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:18,751 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:18,756 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x04E6C050>,), kwargs = {}
+2018-03-07 02:17:28,882 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:28,882 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:29,875 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:29,876 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:30,874 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:30,874 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:31,881 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:31,881 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:32,879 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:32,879 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:33,891 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:33,891 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:34,890 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:34,890 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:35,888 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:35,888 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:36,907 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:36,908 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:37,914 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:37,915 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:38,905 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:38,905 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:39,910 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:39,911 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:40,909 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:40,909 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:41,919 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:41,919 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:42,918 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:42,918 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:43,927 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:43,927 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:44,929 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:44,930 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:45,944 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:45,945 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:46,949 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:46,950 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:53,768 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:17:53,768 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:17:53,774 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05BCC030>,), kwargs = {}
+2018-03-07 02:19:13,719 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:19:13,719 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:19:14,707 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:19:14,707 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:19:15,719 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:19:15,720 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:19:16,722 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:19:16,723 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:19:17,725 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:19:17,726 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:19:33,515 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:19:33,516 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:19:33,521 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x052BC030>,), kwargs = {}
+2018-03-07 02:19:34,587 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:19:34,588 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:19:34,594 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x058DC050>,), kwargs = {}
+2018-03-07 02:19:35,537 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:19:35,538 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:19:35,546 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0545C050>,), kwargs = {}
+2018-03-07 02:20:24,347 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:20:24,348 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:20:25,344 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:20:25,345 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:20:26,358 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:20:26,358 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:20:27,349 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:20:27,350 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:20:28,363 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:20:28,363 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:20:33,310 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:20:33,311 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:20:33,316 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0582C030>,), kwargs = {}
+2018-03-07 02:31:34,628 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:31:34,629 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:31:35,620 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:31:35,621 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:32:01,503 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:32:01,504 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:34:30,817 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:34:30,818 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:34:44,573 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:34:44,574 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:35:19,912 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:35:19,912 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:35:20,950 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:35:20,951 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:35:21,920 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:35:21,920 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:35:22,925 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:35:22,925 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:35:23,930 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:35:23,931 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:35:29,503 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:35:29,504 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:35:29,510 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x052CC0B0>,), kwargs = {}
+2018-03-07 02:35:48,011 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:35:48,012 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:36:08,638 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:36:08,638 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:36:09,635 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:36:09,635 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:36:10,634 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:36:10,634 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:36:11,648 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:36:11,648 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:36:12,670 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:36:12,671 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:36:22,286 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:36:22,287 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:36:22,294 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0520C050>,), kwargs = {}
+2018-03-07 02:37:41,323 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:41,323 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:42,308 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:42,308 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:43,318 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:43,318 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:44,356 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:44,357 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:45,336 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:45,337 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:51,360 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:51,360 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:51,367 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0555C050>,), kwargs = {}
+2018-03-07 02:37:52,318 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:52,318 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:52,323 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x051FC050>,), kwargs = {}
+2018-03-07 02:37:53,360 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:53,361 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:53,367 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05C4C050>,), kwargs = {}
+2018-03-07 02:37:54,335 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:54,335 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:54,339 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0520C030>,), kwargs = {}
+2018-03-07 02:37:55,341 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:37:55,342 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:37:55,348 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0556C070>,), kwargs = {}
+2018-03-07 02:41:29,321 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:41:29,322 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:09,575 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:09,576 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:30,626 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:30,627 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:30,631 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x06443DD0>,), kwargs = {}
+2018-03-07 02:42:31,553 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:31,554 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:31,559 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05B13D70>,), kwargs = {}
+2018-03-07 02:42:32,730 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:32,731 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:32,735 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05D63D90>,), kwargs = {}
+2018-03-07 02:42:33,626 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:33,627 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:33,633 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x063B3DD0>,), kwargs = {}
+2018-03-07 02:42:34,623 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:34,624 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:34,628 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x063A0D90>,), kwargs = {}
+2018-03-07 02:42:35,642 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:35,643 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:35,647 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05E00DD0>,), kwargs = {}
+2018-03-07 02:42:36,638 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:36,639 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:36,643 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05930DD0>,), kwargs = {}
+2018-03-07 02:42:37,756 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:37,757 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:37,763 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05880DD0>,), kwargs = {}
+2018-03-07 02:42:38,681 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:38,682 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:38,687 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05E70D90>,), kwargs = {}
+2018-03-07 02:42:39,753 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:42:39,755 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:42:39,761 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05ED0DD0>,), kwargs = {}
+2018-03-07 02:43:22,911 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:43:22,911 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:00,581 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:00,583 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:06,060 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:06,062 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:06,069 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x059B3DD0>,), kwargs = {}
+2018-03-07 02:44:06,929 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:06,930 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:06,936 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05723DD0>,), kwargs = {}
+2018-03-07 02:44:07,920 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:07,920 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:07,925 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05723DD0>,), kwargs = {}
+2018-03-07 02:44:08,966 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:08,967 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:08,976 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05D13DD0>,), kwargs = {}
+2018-03-07 02:44:10,054 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:10,055 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:10,060 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x06443DD0>,), kwargs = {}
+2018-03-07 02:44:10,963 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:10,964 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:10,970 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05AE3DD0>,), kwargs = {}
+2018-03-07 02:44:12,126 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:12,127 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:12,132 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05F23DD0>,), kwargs = {}
+2018-03-07 02:44:13,678 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:13,679 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:13,685 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05E16DD0>,), kwargs = {}
+2018-03-07 02:44:14,191 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:14,193 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:14,198 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05830DD0>,), kwargs = {}
+2018-03-07 02:44:15,227 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:15,228 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:15,232 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05F20DD0>,), kwargs = {}
+2018-03-07 02:44:52,039 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:52,040 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:58,372 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:58,373 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:58,378 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x06103DD0>,), kwargs = {}
+2018-03-07 02:44:59,235 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:44:59,237 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:44:59,242 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05EF0DD0>,), kwargs = {}
+2018-03-07 02:45:00,328 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:00,330 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:00,336 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05600DD0>,), kwargs = {}
+2018-03-07 02:45:01,562 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:01,563 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:01,568 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05E00DD0>,), kwargs = {}
+2018-03-07 02:45:03,068 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:03,074 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:03,090 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05856ED0>,), kwargs = {}
+2018-03-07 02:45:04,089 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:04,090 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:04,095 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x06443DD0>,), kwargs = {}
+2018-03-07 02:45:04,835 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:04,836 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:04,842 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x054F0DD0>,), kwargs = {}
+2018-03-07 02:45:05,554 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:05,556 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:05,562 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x06430D90>,), kwargs = {}
+2018-03-07 02:45:06,436 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:06,438 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:06,443 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05BC0DD0>,), kwargs = {}
+2018-03-07 02:45:07,409 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:07,412 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:07,416 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x06170DD0>,), kwargs = {}
+2018-03-07 02:45:08,505 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:08,506 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:08,512 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x056F0DD0>,), kwargs = {}
+2018-03-07 02:45:09,465 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:09,466 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:09,471 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05D50DD0>,), kwargs = {}
+2018-03-07 02:45:10,481 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:10,482 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:10,487 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05D40DD0>,), kwargs = {}
+2018-03-07 02:45:11,466 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:11,467 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:11,471 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05CD3DD0>,), kwargs = {}
+2018-03-07 02:45:12,467 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:12,468 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:12,473 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05C63DD0>,), kwargs = {}
+2018-03-07 02:45:13,486 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:13,487 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:13,492 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05570DD0>,), kwargs = {}
+2018-03-07 02:45:14,556 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:14,558 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:14,564 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05FA0D90>,), kwargs = {}
+2018-03-07 02:45:15,534 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:15,535 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:15,539 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05990DD0>,), kwargs = {}
+2018-03-07 02:45:16,531 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:16,531 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:16,536 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x063B0DB0>,), kwargs = {}
+2018-03-07 02:45:17,586 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 02:45:17,587 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 02:45:17,595 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x05883DD0>,), kwargs = {}
+2018-03-07 22:31:43,069 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-07 22:31:43,072 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-07 22:31:43,079 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x051BBC50>,), kwargs = {}
+2018-03-07 22:31:43,280 INFO      : Выполняется функция handle_serv_message с параметрами args = (<__main__.ClientMessageHandler object at 0x051BBC50>,), kwargs = {}
+2018-03-10 00:44:04,905 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-10 00:44:04,906 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-10 00:44:04,910 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0589B130>,), kwargs = {}
+2018-03-10 00:44:05,118 INFO      : Выполняется функция handle_serv_message с параметрами args = (<__main__.ClientMessageHandler object at 0x0589B130>,), kwargs = {}
+2018-03-10 01:38:22,535 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-10 01:38:22,536 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-10 01:48:48,891 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-10 01:48:48,891 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-10 01:49:42,103 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-10 01:49:42,104 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-11 22:42:09,950 INFO      : Выполняется функция run_client с параметрами args = (), kwargs = {}
+2018-03-11 22:42:09,963 INFO      : Выполняется функция cli_param_get с параметрами args = (), kwargs = {}
+2018-03-11 22:42:09,975 INFO      : Выполняется функция create_msg_message с параметрами args = (<__main__.ClientMessageHandler object at 0x058BE250>,), kwargs = {}
+2018-03-17 13:28:22,710 INFO      : Выполняется функция create_presence_message с параметрами args = (<client.ClientMessageHandler object at 0x05CB32D0>, 'tester', 'I love python... or Python loves me'), kwargs = {}
+2018-03-17 13:28:22,713 INFO      : Выполняется функция create_presence_message с параметрами args = (<client.ClientMessageHandler object at 0x05CB35F0>,), kwargs = {}
