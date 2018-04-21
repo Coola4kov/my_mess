@@ -8,12 +8,11 @@ import sqlalchemy.exc
 from threading import Thread, Lock
 from queue import Queue
 
-from system.jim_v2 import JIMMessage, find_cli_key_and_argument
+from system.jim_v2 import JIMMessage, find_cli_key_and_argument, get_safe_hash
 from system.metaclasses import ClientVerifier
 from system.errors import WrongPortError
 from system.db.client_db_worker import ClientWorker
 from system.config import *
-from system import hashing
 
 log_client = logging.getLogger('messenger.client')
 log_debug = logging.getLogger('messenger.debug')
@@ -42,7 +41,6 @@ class Client(metaclass=ClientVerifier):
         self.client_db = None
         self.m = JIMMessage()
         self.m_r = JIMMessage()
-        self._cli_param_get()
 
     def _cli_param_get(self):
         """
@@ -71,7 +69,7 @@ class Client(metaclass=ClientVerifier):
 
     def start_client(self, sock, username, status="I'm here"):
         self.username = username
-        # получаем доступ к принадлежащй данном клиенту базе данных
+        # получаем доступ к принадлежащй данному клиенту базе данных
         self.client_db = ClientWorker('sqlite:///system/db/{}_client_db.db?check_same_thread=False'.
                                       format(self.username))
         self.m.create_presence_message(username, status)
@@ -180,7 +178,7 @@ if __name__ == '__main__':
     sock_ = client.open_client_socket()
     usr = input('Имя пользователя: ')
     pswd = input('Пароль: ')
-    pswd_hash = hashing.get_safe_hash(pswd)
+    pswd_hash = get_safe_hash(pswd)
     print(client.m.create_auth_message(usr, pswd_hash))
     client.m.send_rcv_message(sock_)
     client.start_client(sock_, usr)

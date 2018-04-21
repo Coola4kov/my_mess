@@ -92,21 +92,6 @@ class Handler(Thread):
             print('{} не авторизован'.format(client_name))
         self.message.response_message_create(self.sock, OK)
 
-
-        # while not client:
-        #     client = server_db.request_client(client_name)
-        #     if client:
-        #         server_db.add_to_history(client_name,
-        #                                  self.message.dict_message[TIME],
-        #                                  self.sock.getpeername()[0])
-        #         # print("Клиент уже есть")
-        #     else:
-        #         server_db.add_client(client_name,
-        #                              self.message.dict_message[USER][STATUS])
-        #         print("Клиент добавлен")
-        # server_db.add_online_client(client_name, self.sock.fileno())
-        # self.message.response_message_create(self.sock, OK)
-        #
     def _leave_handle(self):
         room_name = self.message.dict_message[ROOM]
         client = server_db.ident_client_by_sockets(self.sock.fileno())

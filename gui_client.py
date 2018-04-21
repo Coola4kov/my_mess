@@ -8,7 +8,7 @@ from queue import Queue
 import sys
 import time
 
-from config import *
+from system.config import *
 
 # client_db = ClientWorker('sqlite:///system/db/client_db.db')
 client = Client()

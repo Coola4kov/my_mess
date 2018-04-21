@@ -2,6 +2,8 @@ import socket
 import time
 import json
 import sys
+import hashlib
+import binascii
 
 from .errors import DecodedMessageError, ClosedSocketError
 from .config import *
@@ -68,6 +70,13 @@ def find_cli_key_and_argument(key_, default):
     else:
         argument = default
     return argument
+
+
+def get_safe_hash(pswd='', salt=''):
+    byte_pswd = pswd.encode()
+    byte_salt = salt.encode()
+    hash_ = hashlib.pbkdf2_hmac('sha256', byte_pswd, byte_salt, 10)
+    return binascii.hexlify(hash_).decode()
 
 
 # TODO добавить socket в качестве аргумента экземпляра класса
