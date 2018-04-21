@@ -72,6 +72,44 @@ class Client(metaclass=ClientVerifier):
         pswd = input('Пароль: ')
         return usr, pswd
 
+    def authorization(self, sock, usr='', pswd=''):
+        pswd_hash = get_safe_hash(pswd, SALT)
+        client.m.create_auth_reg_message(usr, pswd_hash)
+        client.m.send_rcv_message(sock)
+        resp = client.m.dict_message[RESPONSE]
+        # print(resp)
+        if resp == OK:
+            print("{} авторизован, приятного пользования".format(usr))
+            auth_confirm = True
+            # return "{} авторизован, приятного пользования".format(usr)
+        elif resp == WRONG_COMBINATION:
+            print("Не верный логин или пароль")
+            auth_confirm = False
+            # return "Не верный логин или пароль"
+        else:
+            print("Пользователя не существует")
+            auth_confirm = False
+        if not auth_confirm:
+            print('Попробуйте ещё раз')
+        return auth_confirm
+
+    def registration(self, sock, usr='', pswd=''):
+        client.m.create_auth_reg_message(usr, pswd, registration=True)
+        client.m.send_rcv_message(sock)
+        resp = client.m.dict_message[RESPONSE]
+        if resp == OK:
+            print('Вы зарегистрировались, приятного пользования')
+            reg = True
+        elif resp == CONFLICT:
+            print('Пользователь с такими именем уже существует')
+            reg = False
+        else:
+            print('Регистрация не удалась')
+            reg = False
+        if not reg:
+            print('Попробуйте ещё раз')
+        return reg
+
     def start_client(self, sock, usr="", pswd="", status="I'm here"):
         if not usr:
             reg = False
@@ -190,44 +228,6 @@ class Client(metaclass=ClientVerifier):
                 break
             else:
                 print('Не верное действие')
-
-    def authorization(self, sock, usr='', pswd=''):
-        pswd_hash = get_safe_hash(pswd, SALT)
-        client.m.create_auth_reg_message(usr, pswd_hash)
-        client.m.send_rcv_message(sock)
-        resp = client.m.dict_message[RESPONSE]
-        # print(resp)
-        if resp == OK:
-            print("{} авторизован, приятного пользования".format(usr))
-            auth_confirm = True
-            # return "{} авторизован, приятного пользования".format(usr)
-        elif resp == WRONG_COMBINATION:
-            print("Не верный логин или пароль")
-            auth_confirm = False
-            # return "Не верный логин или пароль"
-        else:
-            print("Пользователя не существует")
-            auth_confirm = False
-        if not auth_confirm:
-            print('Попробуйте ещё раз')
-        return auth_confirm
-
-    def registration(self, sock, usr='', pswd=''):
-        client.m.create_auth_reg_message(usr, pswd, registration=True)
-        client.m.send_rcv_message(sock)
-        resp = client.m.dict_message[RESPONSE]
-        if resp == OK:
-            print('Вы зарегистрировались, приятного пользования')
-            reg = True
-        elif resp == CONFLICT:
-            print('Пользователь с такими именем уже существует')
-            reg = False
-        else:
-            print('Регистрация не удалась')
-            reg = False
-        if not reg:
-            print('Попробуйте ещё раз')
-        return reg
 
 
 if __name__ == '__main__':

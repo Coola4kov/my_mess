@@ -161,20 +161,25 @@ class Handler(Thread):
             time.sleep(0.3)
 
     def _add_del_contact_handle(self, add=True):
-        client = server_db.ident_client_by_sockets(self.sock.fileno())
-        if client:
-            print(client)
-            if self.message.dict_message[USER_ID] not in server_db.get_all_contacts(client):
-                if add:
-                    server_db.add_contacts(client, self.message.dict_message[USER_ID])
-                else:
-                    server_db.del_contact(client, self.message.dict_message[USER_ID])
-                self.message.response_message_create(sock=self.sock, code=OK, with_message=False)
-            else:
-                self.message.response_message_create(sock=self.sock, code=400, with_message=False)
+        new_user = self.message.dict_message[USER_ID]
+        if server_db.request_client(new_user) is None:
+            self.message.response_message_create(self.sock, NOT_FOUND, with_message=False)
         else:
-            print('Клиента с таким сокетом не существует')
-            self.message.response_message_create(WRONG_REQUEST, with_message=False)
+            client = server_db.ident_client_by_sockets(self.sock.fileno())
+            if client:
+                # print(client)
+                if new_user not in server_db.get_all_contacts(client):
+                    if add:
+                        server_db.add_contacts(client, new_user)
+                    else:
+                        server_db.del_contact(client, new_user)
+                    self.message.response_message_create(self.sock, OK, with_message=False)
+                else:
+                    self.message.response_message_create(self.sock, WRONG_REQUEST, with_message=False)
+            else:
+                print('Клиента с таким сокетом не существует')
+                self.message.response_message_create(self.sock, WRONG_REQUEST,
+                                                     message_text='Сокет не зарегистрирован')
 
     def run(self):
         print("i'm running")
