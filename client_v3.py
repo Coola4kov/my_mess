@@ -67,12 +67,18 @@ class Client(metaclass=ClientVerifier):
             raise ConnectionRefusedError("Соединение по {}:{} не возможно".format(self.hostname, self.port))
         return sock
 
-    def start_client(self, sock, username, status="I'm here"):
-        self.username = username
+    def start_client(self, sock, usr="", pswd="", status="I'm here"):
+        if not usr:
+            auth = False
+            while not auth:
+                usr = input('Имя пользователя: ')
+                pswd = input('Пароль: ')
+                auth = self.authorization(sock, usr, pswd)
+        self.username = usr
         # получаем доступ к принадлежащй данному клиенту базе данных
         self.client_db = ClientWorker('sqlite:///system/db/{}_client_db.db?check_same_thread=False'.
                                       format(self.username))
-        self.m.create_presence_message(username, status)
+        self.m.create_presence_message(usr, status)
         self.m.send_rcv_message(sock)
         self.receive_contact_messages(sock, self.m)
 
@@ -172,32 +178,32 @@ class Client(metaclass=ClientVerifier):
             else:
                 print('Не верное действие')
 
-    def authorization(self, sock):
-        while True:
-            usr = input('Имя пользователя: ')
-            pswd = input('Пароль: ')
-            pswd_hash = get_safe_hash(pswd, SALT)
-            client.m.create_auth_reg_message(usr, pswd_hash)
-            client.m.send_rcv_message(sock)
-            resp = client.m.dict_message[RESPONSE]
-            print(resp)
-            if resp == OK:
-                print("{} авторизован, приятного пользования".format(usr))
-                return usr
-                # return "{} авторизован, приятного пользования".format(usr)
-            elif resp == WRONG_COMBINATION:
-                print("Не верный логин или пароль")
-                # return "Не верный логин или пароль"
-            else:
-                print("Пользователя не существует")
+    def authorization(self, sock, usr='', pswd=''):
+        pswd_hash = get_safe_hash(pswd, SALT)
+        client.m.create_auth_reg_message(usr, pswd_hash)
+        client.m.send_rcv_message(sock)
+        resp = client.m.dict_message[RESPONSE]
+        print(resp)
+        if resp == OK:
+            print("{} авторизован, приятного пользования".format(usr))
+            auth_confirm = True
+            # return "{} авторизован, приятного пользования".format(usr)
+        elif resp == WRONG_COMBINATION:
+            print("Не верный логин или пароль")
+            auth_confirm = False
+            # return "Не верный логин или пароль"
+        else:
+            print("Пользователя не существует")
+            auth_confirm = False
+        if not auth_confirm:
             print('Попробуйте ещё раз')
+        return auth_confirm
 
 
 if __name__ == '__main__':
     client = Client()
     sock_ = client.open_client_socket()
-    usr = client.authorization(sock_)
-    client.start_client(sock_, usr)
+    client.start_client(sock_)
     thread = Thread(target=client.cycle_read_messages, args=[sock_, que])
     thread.daemon = False
     thread2 = Thread(target=client.cli_interact, args=[sock_])

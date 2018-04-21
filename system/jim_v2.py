@@ -407,6 +407,6 @@ if __name__ == '__main__':
     # s.close()
     m = JIMMessage()
     s = open_client_socket('localhost', 7777)
-    m.create_auth_reg_message('lol', '987654321', registration=True)
+    m.create_auth_reg_message('MUSEUN', 'test_lol', registration=True)
     m.send_rcv_message(s)
     print(m.dict_message)

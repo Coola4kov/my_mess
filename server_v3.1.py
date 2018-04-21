@@ -48,7 +48,7 @@ class Handler(Thread):
             self._add_del_contact_handle()
         elif self.action == DEL_CONTACT:
             self._add_del_contact_handle(False)
-        # TODO протестировать работу обоих методов
+        # TODO протестировать работу новых методов
         elif self.action == JOIN:
             self._join_handle()
         elif self.action == LEAVE:
@@ -146,19 +146,6 @@ class Handler(Thread):
                                      self.sock.getpeername()[0])
             server_db.add_online_client(username, self.sock.fileno())
             self.message.response_message_create(self.sock, OK)
-        # while not client:
-        #     client = server_db.request_client(username)
-        #     if client:
-        #         server_db.add_to_history(username,
-        #                                  self.message.dict_message[TIME],
-        #                                  self.sock.getpeername()[0])
-        #         print("Клиент уже есть")
-            # else:
-            #     server_db.add_client(username,
-            #                          self.message.dict_message[USER][STATUS])
-            #     print("Клиент добавлен")
-        # server_db.add_online_client(username, self.sock.fileno())
-        # self.message.response_message_create(self.sock, OK)
 
     def _get_contacts_handle(self):
         client = server_db.ident_client_by_sockets(self.sock.fileno())
