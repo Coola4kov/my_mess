@@ -37,6 +37,7 @@ JOIN = 'join'
 LEAVE = 'leave'
 PROBE = 'probe'
 AUTH = 'authenticate'
+REGISTER = 'register'
 
 # Коды ответов (будут дополняться)
 BASIC_NOTICE = 100
@@ -44,6 +45,10 @@ OK = 200
 ACCEPTED = 202
 WRONG_REQUEST = 400  # неправильный запрос/json объект
 SERVER_ERROR = 500
+CONFLICT = 409
 
 # Кортеж из кодов ответов
-RESPONSE_CODES = (BASIC_NOTICE, OK, ACCEPTED, WRONG_REQUEST, SERVER_ERROR)
+RESPONSE_CODES = (BASIC_NOTICE, OK, ACCEPTED, WRONG_REQUEST, SERVER_ERROR, CONFLICT)
+
+# глобальные переменные
+SALT = "F`:z6j)BuB9#8$eV"

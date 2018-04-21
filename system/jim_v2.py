@@ -5,8 +5,8 @@ import sys
 import hashlib
 import binascii
 
-from .errors import DecodedMessageError, ClosedSocketError
-from .config import *
+from system.errors import DecodedMessageError, ClosedSocketError
+from system.config import *
 
 
 def open_client_socket(host, port):
@@ -243,10 +243,14 @@ class JIMMessage(Message):
         self.dict_message = self._create_message(CONTACT_LIST, **body, time_included=False)
         return self._end_of_creating()
 
-    def create_auth_message(self, account_name='basic_user', password=''):
+    def create_auth_reg_message(self, account_name='basic_user', password='', registration=False):
         user = {ACCOUNT_NAME: account_name, PASSWORD: password}
         body = {USER: user}
-        self.dict_message = self._create_message(AUTH, True, **body)
+        if registration:
+            method = REGISTER
+        else:
+            method = AUTH
+        self.dict_message = self._create_message(method, True, **body)
         return self._end_of_creating()
 
     def _end_of_creating(self):
@@ -262,11 +266,21 @@ class JIMResponse(Message):
         """
         check_methods = {PRESENCE: self._presence_check, MSG: self._msg_check, GET_CONTACTS: self._get_contacts_check,
                          ADD_CONTACT: self._add_contact_check, DEL_CONTACT: self._del_contact_check,
-                         JOIN: self._join_check, LEAVE: self._leave_check, AUTH: self._auth_check}
+                         JOIN: self._join_check, LEAVE: self._leave_check, AUTH: self._auth_check,
+                         REGISTER: self._reg_check}
         # Метод для осущеснтвления проверки достаём из типа ACTION, пришедшего в сообщении
         method = check_methods.get(self.dict_message.get(ACTION))
         if method:
             action = method()
+        else:
+            action = None
+        return action
+
+    def _reg_check(self):
+        if self.dict_message.get(ACTION) == REGISTER \
+                and TIME in self.dict_message \
+                and USER in self.dict_message:
+            action = REGISTER
         else:
             action = None
         return action
@@ -277,7 +291,7 @@ class JIMResponse(Message):
                 and USER in self.dict_message:
             action = AUTH
         else:
-            action = 0
+            action = None
         return action
 
     def _join_check(self):
@@ -378,16 +392,21 @@ class JIMResponse(Message):
 
 
 if __name__ == '__main__':
-    message_byte = b'{"action": "presence", "time": 1519377276, "type": "status", "user": ' \
-                   b'{"account_name": "MOTHER_OF_DRAGON", "status": "Hello"}}'
-    message_dict = {123456: 12335}
-    m = Message(message_byte)
-    m2 = Message(message_dict)
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # message_byte = b'{"action": "presence", "time": 1519377276, "type": "status", "user": ' \
+    #                b'{"account_name": "MOTHER_OF_DRAGON", "status": "Hello"}}'
+    # message_dict = {123456: 12335}
+    # m = Message(message_byte)
+    # m2 = Message(message_dict)
+    # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # s = open_client_socket('localhost', 7777)
+    # m.send_rcv_message(s)
+    # print(m.dict_message)
+    # m.rcv_message(s)
+    # print(m.dict_message)
+    # print(s.getpeername())
+    # s.close()
+    m = JIMMessage()
     s = open_client_socket('localhost', 7777)
+    m.create_auth_reg_message('lol', '987654321', registration=True)
     m.send_rcv_message(s)
     print(m.dict_message)
-    m.rcv_message(s)
-    print(m.dict_message)
-    print(s.getpeername())
-    s.close()

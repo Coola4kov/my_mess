@@ -179,7 +179,7 @@ if __name__ == '__main__':
     usr = input('Имя пользователя: ')
     pswd = input('Пароль: ')
     pswd_hash = get_safe_hash(pswd)
-    print(client.m.create_auth_message(usr, pswd_hash))
+    print(client.m.create_auth_reg_message(usr, pswd_hash))
     client.m.send_rcv_message(sock_)
     client.start_client(sock_, usr)
     thread = Thread(target=client.cycle_read_messages, args=[sock_, que])

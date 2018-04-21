@@ -101,7 +101,7 @@ class HashTable(Base):
     """Таблица для храненеия хешей паролей"""
     __tablename__ = 'hash_table'
     user_id = Column(Integer, ForeignKey('client.id'), unique=True, primary_key=True)
-    hashpass = Column(Integer, primary_key=True)
+    hashpass = Column(String, primary_key=True)
     client = relationship('Client', back_populates="hash")
 
     def __init__(self, client, hashpass):
@@ -273,8 +273,8 @@ if __name__ == '__main__':
     # test.add_client('son', 'nothing')
     print(test.get_client_hash('test').hashpass)
     # test.get_client_hash('test')
-    test.update_client_hash('test', 99999)
-    test.register_new_hash('MUSEUN', 123456789111)
-    print(test.get_client_hash('MUSEUN'))
-    test.update_client_hash('MUSEUN', 11111)
+    test.update_client_hash('test', '99999')
+    # test.register_new_hash('12345', '956845987')
+    print(test.get_client_hash('12345'))
+    test.update_client_hash('MUSEUN', '11111')
     print(test.get_client_hash('MUSEUN'))

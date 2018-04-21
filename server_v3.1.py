@@ -7,7 +7,7 @@ import time
 from threading import Thread
 from queue import Queue
 
-from system.jim_v2 import JIMResponse, JIMMessage, find_cli_key_and_argument
+from system.jim_v2 import JIMResponse, JIMMessage, find_cli_key_and_argument, get_safe_hash
 from system.errors import ClosedSocketError, WrongPortError, WrongInterfaceError
 from system.db import server_db_worker
 from system.metaclasses import ServerVerifier
@@ -55,6 +55,8 @@ class Handler(Thread):
             self._leave_handle()
         elif self.action == AUTH:
             self._auth_handle()
+        elif self.action == REGISTER:
+            self._register_handle()
         else:
             self.message.response_message_create(self.sock, WRONG_REQUEST)
 
@@ -83,7 +85,6 @@ class Handler(Thread):
 
     def _auth_handle(self):
         client_name = self.message.dict_message[USER][ACCOUNT_NAME]
-        client = None
         client = server_db.request_client(client_name)
         client_hash = self.message.dict_message[USER][PASSWORD]
         if client.hash[0].hashpass == client_hash:
@@ -91,6 +92,21 @@ class Handler(Thread):
         else:
             print('{} не авторизован'.format(client_name))
         self.message.response_message_create(self.sock, OK)
+
+    def _register_handle(self):
+        client_name = self.message.dict_message[USER][ACCOUNT_NAME]
+        pswd = self.message.dict_message[USER][PASSWORD]
+        # проверяем, если клиент с таким именем уже не зарегистрирован в нашем мессенджере
+        client = server_db.request_client(client_name)
+        if client is None:
+            server_db.add_client(client_name, "Yep, i'm here")
+            hash_ = get_safe_hash(pswd, SALT)
+            print(hash_)
+            server_db.register_new_hash(client_login=client_name, hash_=hash_)
+            self.message.response_message_create(self.sock, OK)
+        else:
+            self.message.response_message_create(self.sock, code=CONFLICT, with_message=True,
+                                                 message_text="Account is in use", send_message=True)
 
     def _leave_handle(self):
         room_name = self.message.dict_message[ROOM]
@@ -172,14 +188,13 @@ class Handler(Thread):
         return
 
 
-class Server:
+class Server(metaclass=ServerVerifier):
     def __init__(self, default_if_add='', default_port=7777, connections=5, sock_timeout=None):
         self._def_if_add = default_if_add
         self._def_port = default_port
         self.connections = connections
         self.sock_timeout = sock_timeout
         self.if_add, self.port = self._cli_param_get()
-        self._cli_param_get()
 
     def _cli_param_get(self):
         """
@@ -228,7 +243,6 @@ class Server:
                 action = m.get_message_action()
                 print(action)
                 input_q.put({'action': action, 'sock': sock, 'clients': clients, 'text': m.dict_message})
-                # print(input_q.get())
 
             except (ClosedSocketError, ConnectionResetError, ConnectionAbortedError):
                 # если выходит ошибка, значит клиент вышел, не разорвав соединение, удаляем сокет из списка клиентов
