@@ -67,12 +67,25 @@ class Client(metaclass=ClientVerifier):
             raise ConnectionRefusedError("Соединение по {}:{} не возможно".format(self.hostname, self.port))
         return sock
 
+    def user_credentials_req(self):
+        usr = input('Имя пользователя: ')
+        pswd = input('Пароль: ')
+        return usr, pswd
+
     def start_client(self, sock, usr="", pswd="", status="I'm here"):
         if not usr:
+            reg = False
+            while not reg:
+                ans = input('Вы зарегистрированны? y/n: ')
+                ans = ans.upper()
+                if ans == 'N':
+                    usr, pswd = self.user_credentials_req()
+                    reg = self.registration(sock, usr, pswd)
+                elif ans == 'Y':
+                    reg = True
             auth = False
             while not auth:
-                usr = input('Имя пользователя: ')
-                pswd = input('Пароль: ')
+                usr, pswd = self.user_credentials_req()
                 auth = self.authorization(sock, usr, pswd)
         self.username = usr
         # получаем доступ к принадлежащй данному клиенту базе данных
@@ -183,7 +196,7 @@ class Client(metaclass=ClientVerifier):
         client.m.create_auth_reg_message(usr, pswd_hash)
         client.m.send_rcv_message(sock)
         resp = client.m.dict_message[RESPONSE]
-        print(resp)
+        # print(resp)
         if resp == OK:
             print("{} авторизован, приятного пользования".format(usr))
             auth_confirm = True
@@ -198,6 +211,23 @@ class Client(metaclass=ClientVerifier):
         if not auth_confirm:
             print('Попробуйте ещё раз')
         return auth_confirm
+
+    def registration(self, sock, usr='', pswd=''):
+        client.m.create_auth_reg_message(usr, pswd, registration=True)
+        client.m.send_rcv_message(sock)
+        resp = client.m.dict_message[RESPONSE]
+        if resp == OK:
+            print('Вы зарегистрировались, приятного пользования')
+            reg = True
+        elif resp == CONFLICT:
+            print('Пользователь с такими именем уже существует')
+            reg = False
+        else:
+            print('Регистрация не удалась')
+            reg = False
+        if not reg:
+            print('Попробуйте ещё раз')
+        return reg
 
 
 if __name__ == '__main__':
