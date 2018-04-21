@@ -172,15 +172,31 @@ class Client(metaclass=ClientVerifier):
             else:
                 print('Не верное действие')
 
+    def authorization(self, sock):
+        while True:
+            usr = input('Имя пользователя: ')
+            pswd = input('Пароль: ')
+            pswd_hash = get_safe_hash(pswd, SALT)
+            client.m.create_auth_reg_message(usr, pswd_hash)
+            client.m.send_rcv_message(sock)
+            resp = client.m.dict_message[RESPONSE]
+            print(resp)
+            if resp == OK:
+                print("{} авторизован, приятного пользования".format(usr))
+                return usr
+                # return "{} авторизован, приятного пользования".format(usr)
+            elif resp == WRONG_COMBINATION:
+                print("Не верный логин или пароль")
+                # return "Не верный логин или пароль"
+            else:
+                print("Пользователя не существует")
+            print('Попробуйте ещё раз')
+
 
 if __name__ == '__main__':
     client = Client()
     sock_ = client.open_client_socket()
-    usr = input('Имя пользователя: ')
-    pswd = input('Пароль: ')
-    pswd_hash = get_safe_hash(pswd)
-    print(client.m.create_auth_reg_message(usr, pswd_hash))
-    client.m.send_rcv_message(sock_)
+    usr = client.authorization(sock_)
     client.start_client(sock_, usr)
     thread = Thread(target=client.cycle_read_messages, args=[sock_, que])
     thread.daemon = False
