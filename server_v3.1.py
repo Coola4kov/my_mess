@@ -262,6 +262,7 @@ class Server(metaclass=ServerVerifier):
         соответсвующим функциям.
         """
         clients = []
+        server_db.drop_all_online_clients()
         with self._open_server_socket() as s:
             while True:
                 try:

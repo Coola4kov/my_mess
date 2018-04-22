@@ -32,7 +32,7 @@ class AuthWindow(QtWidgets.QDialog):
         self.user = ""
         self.pass_ = ""
 
-    def get_username(self):
+    def get_credentials(self):
         self.user = self.username.text()
         self.pass_ = self.password.text()
         print(self.user, self.pass_)

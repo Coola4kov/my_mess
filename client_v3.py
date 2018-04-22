@@ -41,6 +41,7 @@ class Client(metaclass=ClientVerifier):
         self.client_db = None
         self.m = JIMMessage()
         self.m_r = JIMMessage()
+        self.sock = self.open_client_socket()
 
     def _cli_param_get(self):
         """
@@ -67,15 +68,16 @@ class Client(metaclass=ClientVerifier):
             raise ConnectionRefusedError("Соединение по {}:{} не возможно".format(self.hostname, self.port))
         return sock
 
-    def user_credentials_req(self):
+    @staticmethod
+    def user_credentials_req():
         usr = input('Имя пользователя: ')
         pswd = input('Пароль: ')
         return usr, pswd
 
-    def authorization(self, sock, usr='', pswd=''):
+    def authorization(self, usr='', pswd=''):
         pswd_hash = get_safe_hash(pswd, SALT)
         client.m.create_auth_reg_message(usr, pswd_hash)
-        client.m.send_rcv_message(sock)
+        client.m.send_rcv_message(self.sock)
         resp = client.m.dict_message[RESPONSE]
         # print(resp)
         if resp == OK:
@@ -93,9 +95,9 @@ class Client(metaclass=ClientVerifier):
             print('Попробуйте ещё раз')
         return auth_confirm
 
-    def registration(self, sock, usr='', pswd=''):
+    def registration(self, usr='', pswd=''):
         client.m.create_auth_reg_message(usr, pswd, registration=True)
-        client.m.send_rcv_message(sock)
+        client.m.send_rcv_message(self.sock)
         resp = client.m.dict_message[RESPONSE]
         if resp == OK:
             print('Вы зарегистрировались, приятного пользования')
@@ -110,7 +112,7 @@ class Client(metaclass=ClientVerifier):
             print('Попробуйте ещё раз')
         return reg
 
-    def start_client(self, sock, usr="", pswd="", status="I'm here"):
+    def start_client(self, usr="", pswd="", status="I'm here"):
         if not usr:
             reg = False
             while not reg:
@@ -118,28 +120,28 @@ class Client(metaclass=ClientVerifier):
                 ans = ans.upper()
                 if ans == 'N':
                     usr, pswd = self.user_credentials_req()
-                    reg = self.registration(sock, usr, pswd)
+                    reg = self.registration(usr, pswd)
                 elif ans == 'Y':
                     reg = True
             auth = False
             while not auth:
                 usr, pswd = self.user_credentials_req()
-                auth = self.authorization(sock, usr, pswd)
+                auth = self.authorization(usr, pswd)
         self.username = usr
         # получаем доступ к принадлежащй данному клиенту базе данных
         self.client_db = ClientWorker('sqlite:///system/db/{}_client_db.db?check_same_thread=False'.
                                       format(self.username))
         self.m.create_presence_message(usr, status)
-        self.m.send_rcv_message(sock)
-        self.receive_contact_messages(sock, self.m)
+        self.m.send_rcv_message(self.sock)
+        self.receive_contact_messages(self.m)
 
-    def receive_contact_messages(self, sock, message):
+    def receive_contact_messages(self, message):
         message_lock.acquire()
         message.create_get_contact_message()
-        print(message.send_rcv_message(sock))
+        print(message.send_rcv_message(self.sock))
         quantity = message.dict_message[QUANTITY]
         for _ in range(quantity):
-            message.rcv_message(sock)
+            message.rcv_message(self.sock)
             try:
                 self.client_db.add_contact(message.dict_message[USER_ID])
             except sqlalchemy.exc.IntegrityError:
@@ -151,10 +153,10 @@ class Client(metaclass=ClientVerifier):
         self.client_db.session.rollback()
         return self.client_db.get_all_contacts()
 
-    def change_contact_global(self, sock, username='MUSEUN', add=True):
+    def change_contact_global(self, username='MUSEUN', add=True):
         message_lock.acquire()
         self.m.create_change_contact_message(username, add=add)
-        self.m.send_rcv_message(sock)
+        self.m.send_rcv_message(self.sock)
         print(self.m.dict_message)
         if self.m.dict_message[RESPONSE] == 200:
             ok = True
@@ -176,20 +178,20 @@ class Client(metaclass=ClientVerifier):
             ok = False
         return ok
 
-    def send_msg_message(self, sock, to, from_, text):
+    def send_msg_message(self, to, from_, text):
         message_lock.acquire()
         self.m.create_msg_message(False, to, from_, text)
         self.client_db.add_to_history(to, time.ctime(), text, True)
-        self.m.send_rcv_message(sock)
+        self.m.send_rcv_message(self.sock)
         message_lock.release()
 
     def load_messages_from_history(self, contact=''):
         return self.client_db.get_messages_from_history(contact)
 
-    def cycle_read_messages(self, sock, queue):
+    def cycle_read_messages(self, queue):
         while self.alive:
             wait = 0.5
-            r, w, e = select.select([sock], [sock], [], wait)
+            r, w, e = select.select([self.sock], [self.sock], [], wait)
             for sock_ in r:
                 self.m_r.rcv_message(sock_)
                 if self.m_r.dict_message[ACTION] == MSG:
@@ -200,13 +202,13 @@ class Client(metaclass=ClientVerifier):
                     queue.put(self.m_r.dict_message)
                     self.m_r.clean_buffer()
 
-    def cli_interact(self, sock):
+    def cli_interact(self):
         while self.alive:
             action = input('>>')
             if action == 'send':
                 to_ = input('>>Кому отправить: ')
                 text = input('>>Текст сообщения: ')
-                self.send_msg_message(sock, to=to_, from_=self.username, text=text)
+                self.send_msg_message(to=to_, from_=self.username, text=text)
                 pass
             elif action == 'show':
                 for i in self.get_all_contacts():
@@ -214,15 +216,19 @@ class Client(metaclass=ClientVerifier):
             elif action == 'add':
                 new = input('>>Введите имя контакта: ')
                 if self.check_local_contact(new):
-                    if self.change_contact_global(sock, new):
+                    if self.change_contact_global(new):
                         self.add_contact_local(new)
                         print('Клиент добавлен')
+                    else:
+                        print('Не удаётся добавить клиента')
             elif action == 'del':
                 del_ = input('>>Введите имя контакта: ')
                 if not self.check_local_contact(del_):
-                    if self.change_contact_global(sock, del_, False):
+                    if self.change_contact_global(del_, False):
                         self.del_contact_local(del_)
                         print('Клиент удален')
+                else:
+                    print('Не удаётся удалить клиента')
             elif action == 'end':
                 self.alive = False
                 break
@@ -232,11 +238,11 @@ class Client(metaclass=ClientVerifier):
 
 if __name__ == '__main__':
     client = Client()
-    sock_ = client.open_client_socket()
-    client.start_client(sock_)
-    thread = Thread(target=client.cycle_read_messages, args=[sock_, que])
+    # sock_ = client.open_client_socket()
+    client.start_client()
+    thread = Thread(target=client.cycle_read_messages, args=[que])
     thread.daemon = False
-    thread2 = Thread(target=client.cli_interact, args=[sock_])
+    thread2 = Thread(target=client.cli_interact)
     thread2.daemon = False
     thread.start()
     thread2.start()
