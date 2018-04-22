@@ -76,9 +76,9 @@ class Client(metaclass=ClientVerifier):
 
     def authorization(self, usr='', pswd=''):
         pswd_hash = get_safe_hash(pswd, SALT)
-        client.m.create_auth_reg_message(usr, pswd_hash)
-        client.m.send_rcv_message(self.sock)
-        resp = client.m.dict_message[RESPONSE]
+        self.m.create_auth_reg_message(usr, pswd_hash)
+        self.m.send_rcv_message(self.sock)
+        resp = self.m.dict_message[RESPONSE]
         # print(resp)
         if resp == OK:
             print("{} авторизован, приятного пользования".format(usr))
@@ -96,9 +96,9 @@ class Client(metaclass=ClientVerifier):
         return auth_confirm
 
     def registration(self, usr='', pswd=''):
-        client.m.create_auth_reg_message(usr, pswd, registration=True)
-        client.m.send_rcv_message(self.sock)
-        resp = client.m.dict_message[RESPONSE]
+        self.m.create_auth_reg_message(usr, pswd, registration=True)
+        self.m.send_rcv_message(self.sock)
+        resp = self.m.dict_message[RESPONSE]
         if resp == OK:
             print('Вы зарегистрировались, приятного пользования')
             reg = True
