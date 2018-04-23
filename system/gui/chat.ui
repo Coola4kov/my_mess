@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>783</width>
-    <height>562</height>
+    <width>874</width>
+    <height>619</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>370</y>
+      <y>360</y>
       <width>391</width>
-      <height>91</height>
+      <height>121</height>
      </rect>
     </property>
    </widget>
@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>480</y>
+      <y>500</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -47,7 +47,7 @@
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>480</y>
+      <y>500</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -76,7 +76,7 @@
     <property name="geometry">
      <rect>
       <x>540</x>
-      <y>480</y>
+      <y>500</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -92,7 +92,7 @@
     <property name="geometry">
      <rect>
       <x>650</x>
-      <y>480</y>
+      <y>500</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -105,7 +105,7 @@
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>340</y>
+      <y>320</y>
       <width>401</width>
       <height>20</height>
      </rect>
@@ -120,7 +120,7 @@
       <x>40</x>
       <y>50</y>
       <width>271</width>
-      <height>411</height>
+      <height>431</height>
      </rect>
     </property>
    </widget>
@@ -130,7 +130,7 @@
       <x>350</x>
       <y>50</y>
       <width>391</width>
-      <height>281</height>
+      <height>261</height>
      </rect>
     </property>
     <property name="readOnly">
@@ -159,14 +159,52 @@
      <string/>
     </property>
    </widget>
+   <widget class="QGraphicsView" name="myImg">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>360</y>
+      <width>100</width>
+      <height>75</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="contactImg">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>50</y>
+      <width>100</width>
+      <height>75</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="myName">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>340</y>
+      <width>55</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>783</width>
+     <width>874</width>
      <height>26</height>
     </rect>
    </property>
@@ -181,11 +219,50 @@
     <addaction name="actionRegister"/>
     <addaction name="separator"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionUlined"/>
+    <addaction name="actionItalic"/>
+    <addaction name="actionBold"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menuView"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="mouseTracking">
+    <bool>true</bool>
+   </property>
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::NoToolBarArea</set>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>true</bool>
+   </attribute>
+   <addaction name="actionItalic"/>
+   <addaction name="actionBold"/>
+   <addaction name="actionUlined"/>
+   <addaction name="separator"/>
+   <addaction name="actionsmile"/>
+   <addaction name="actionsurprise"/>
   </widget>
   <action name="actionLogin">
    <property name="text">
     <string>Login</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actionLogoff">
@@ -196,6 +273,66 @@
   <action name="actionRegister">
    <property name="text">
     <string>Register</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionItalic">
+   <property name="icon">
+    <iconset>
+     <normalon>i.jpg</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Italic</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionBold">
+   <property name="icon">
+    <iconset>
+     <normalon>b.jpg</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Bold</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionUlined">
+   <property name="icon">
+    <iconset>
+     <normaloff>u.jpg</normaloff>
+     <normalon>u.jpg</normalon>u.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>Ulined</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionsmile">
+   <property name="icon">
+    <iconset>
+     <normaloff>ab.gif</normaloff>ab.gif</iconset>
+   </property>
+   <property name="text">
+    <string>smile</string>
+   </property>
+  </action>
+  <action name="actionsurprise">
+   <property name="icon">
+    <iconset>
+     <normaloff>ai.gif</normaloff>ai.gif</iconset>
+   </property>
+   <property name="text">
+    <string>surprise</string>
    </property>
   </action>
  </widget>

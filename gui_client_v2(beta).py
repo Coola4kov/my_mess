@@ -177,6 +177,7 @@ class ChatWindow(QtWidgets.QMainWindow):
             time_ = time.ctime()
         self.chatDisplay.append("{} [{}]: {}\n".format(time_, chat_name, doc))
 
+
     def load_chat_history(self):
         history = reversed(client.load_messages_from_history(self.selected_item_text))
         for m in history:
@@ -236,6 +237,7 @@ class ChatWindow(QtWidgets.QMainWindow):
     def get_chat_text(self):
         # забираем данные из строки ввода текста
         document = self.textChatEdit.toPlainText()
+        # document = self.textChatEdit.toHtml()
         # очищаем строку ввода текста
         self.textChatEdit.clear()
         return document
@@ -246,6 +248,14 @@ class ChatWindow(QtWidgets.QMainWindow):
         client.send_msg_message(self.selected_item_text, client.username, doc)
         mute_.unlock()
         self.append_to_text(doc=doc)
+
+    def action_italic(self):
+        pass
+
+    def make_italic(self):
+        text = self.textChatEdit.textCursor().selectedText()
+        print(text)
+        self.textChatEdit.textCursor().insertHtml('<i>' + text + '</i>')
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -262,6 +272,7 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.pushDelete.clicked.connect(self.del_item_from_list)
         self.pushSend.clicked.connect(self.send_message)
         self.pushCancle.clicked.connect(self.textChatEdit.clear)
+        self.actionItalic.triggered.connect(self.make_italic)
 
 
 if __name__ == '__main__':
