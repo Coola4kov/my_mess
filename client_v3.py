@@ -133,20 +133,20 @@ class Client(metaclass=ClientVerifier):
                                       format(self.username))
         self.m.create_presence_message(usr, status)
         self.m.send_rcv_message(self.sock)
-        self.receive_contact_messages(self.m)
+        self.receive_contact_messages()
 
-    def receive_contact_messages(self, message):
+    def receive_contact_messages(self):
         message_lock.acquire()
-        message.create_get_contact_message()
-        print(message.send_rcv_message(self.sock))
-        quantity = message.dict_message[QUANTITY]
+        self.m.create_get_contact_message()
+        print(self.m.send_rcv_message(self.sock))
+        quantity = self.m.dict_message[QUANTITY]
         for _ in range(quantity):
-            message.rcv_message(self.sock)
+            self.m.rcv_message(self.sock)
             try:
-                self.client_db.add_contact(message.dict_message[USER_ID])
+                self.client_db.add_contact(self.m.dict_message[USER_ID])
             except sqlalchemy.exc.IntegrityError:
                 print('Клиент уже есть')
-            print(message.dict_message)
+            print(self.m.dict_message)
         message_lock.release()
 
     def get_all_contacts(self):
@@ -172,7 +172,7 @@ class Client(metaclass=ClientVerifier):
         self.client_db.del_contact(contact)
 
     def check_local_contact(self, contact=''):
-        if contact not in self.client_db.get_all_contacts():
+        if contact in self.client_db.get_all_contacts():
             ok = True
         else:
             ok = False
