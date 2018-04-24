@@ -6,6 +6,7 @@ from PyQt5.QtCore import QObject, QThread, pyqtSlot, pyqtSignal,  QMutex, Qt
 from queue import Queue
 
 import sys
+import re
 import time
 
 from system.decorators import mute
@@ -177,7 +178,6 @@ class ChatWindow(QtWidgets.QMainWindow):
             time_ = time.ctime()
         self.chatDisplay.append("{} [{}]: {}\n".format(time_, chat_name, doc))
 
-
     def load_chat_history(self):
         history = reversed(client.load_messages_from_history(self.selected_item_text))
         for m in history:
@@ -236,8 +236,9 @@ class ChatWindow(QtWidgets.QMainWindow):
 
     def get_chat_text(self):
         # забираем данные из строки ввода текста
-        document = self.textChatEdit.toPlainText()
-        # document = self.textChatEdit.toHtml()
+        # document = self.textChatEdit.toPlainText()
+        document = self.parsing_html(self.textChatEdit.toHtml())
+        print(document)
         # очищаем строку ввода текста
         self.textChatEdit.clear()
         return document
@@ -249,13 +250,37 @@ class ChatWindow(QtWidgets.QMainWindow):
         mute_.unlock()
         self.append_to_text(doc=doc)
 
-    def action_italic(self):
-        pass
+    def change_style(self, style='italic'):
+        if style == 'italic':
+            tag = 'i'
+        elif style == 'bold':
+            tag = 'b'
+        elif style == 'underlined':
+            tag = 'u'
+        text = self.textChatEdit.textCursor().selection()
+        text_fragment = self.parsing_fragment(text.toHtml())
+        self.textChatEdit.textCursor().insertHtml('<{}>'.format(tag) + text_fragment + '</{}>'.format(tag))
 
     def make_italic(self):
-        text = self.textChatEdit.textCursor().selectedText()
-        print(text)
-        self.textChatEdit.textCursor().insertHtml('<i>' + text + '</i>')
+        self.change_style()
+
+    def make_bold(self):
+        self.change_style('bold')
+
+    def make_under(self):
+        self.change_style('underlined')
+
+    @staticmethod
+    def parsing_html(text):
+        pattern = r';">(.*)</p>'
+        res = re.findall(pattern, text)
+        return res[0]
+
+    @staticmethod
+    def parsing_fragment(self, text):
+        pattern = r'<!--StartFragment-->(.*)<!--EndFragment-->'
+        res = re.findall(pattern, text)
+        return res[0]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -273,6 +298,8 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.pushSend.clicked.connect(self.send_message)
         self.pushCancle.clicked.connect(self.textChatEdit.clear)
         self.actionItalic.triggered.connect(self.make_italic)
+        self.actionBold.triggered.connect(self.make_bold)
+        self.actionUlined.triggered.connect(self.make_under)
 
 
 if __name__ == '__main__':
