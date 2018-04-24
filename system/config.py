@@ -54,3 +54,8 @@ RESPONSE_CODES = (BASIC_NOTICE, OK, ACCEPTED, WRONG_REQUEST, SERVER_ERROR, CONFL
 
 # глобальные переменные
 SALT = "F`:z6j)BuB9#8$eV"
+
+SMILES = {'smile': 'system/gui/ab.gif',
+          'sad': 'system/gui/ac.gif',
+          'crazy': 'system/gui/ai.gif'
+          }

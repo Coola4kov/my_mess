@@ -131,6 +131,7 @@ class ChatWindow(QtWidgets.QMainWindow):
     def set_buttons_enabled(self):
         for el in [self.pushDelete, self.pushAdd, self.pushSend, self.pushCancle]:
             el.setEnabled(True)
+        self.textChatEdit.setReadOnly(False)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -250,6 +251,8 @@ class ChatWindow(QtWidgets.QMainWindow):
         mute_.unlock()
         self.append_to_text(doc=doc)
 
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def change_style(self, style='italic'):
         if style == 'italic':
             tag = 'i'
@@ -259,7 +262,11 @@ class ChatWindow(QtWidgets.QMainWindow):
             tag = 'u'
         text = self.textChatEdit.textCursor().selection()
         text_fragment = self.parsing_fragment(text.toHtml())
-        self.textChatEdit.textCursor().insertHtml('<{}>'.format(tag) + text_fragment + '</{}>'.format(tag))
+        if text_fragment:
+            self.textChatEdit.textCursor().insertHtml('<{}>'.format(tag) +
+                                                      text_fragment +
+                                                      '</{}>'.format(tag))
+
 
     def make_italic(self):
         self.change_style()
@@ -277,12 +284,29 @@ class ChatWindow(QtWidgets.QMainWindow):
         return res[0]
 
     @staticmethod
-    def parsing_fragment(self, text):
+    def parsing_fragment(text):
         pattern = r'<!--StartFragment-->(.*)<!--EndFragment-->'
         res = re.findall(pattern, text)
-        return res[0]
+        if res:
+            return res[0]
+        else:
+            return None
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def smile(self, smile_type='smile'):
+        url = SMILES.get(smile_type, None)
+        if url:
+            self.textChatEdit.textCursor().insertHtml('<img src="%s" />' % url)
+
+    def reg_smile(self):
+        self.smile()
+
+    def sad_smile(self):
+        self.smile('sad')
+
+    def crz_smile(self):
+        self.smile('crazy')
 
     def start(self):
         self.actionLogin.triggered.connect(self.auth.action)
@@ -300,6 +324,9 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.actionItalic.triggered.connect(self.make_italic)
         self.actionBold.triggered.connect(self.make_bold)
         self.actionUlined.triggered.connect(self.make_under)
+        self.actionsmile.triggered.connect(self.reg_smile)
+        self.actionsad.triggered.connect(self.sad_smile)
+        self.actioncrazy.triggered.connect(self.crz_smile)
 
 
 if __name__ == '__main__':
