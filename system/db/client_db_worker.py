@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, BLOB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
@@ -17,6 +17,8 @@ class Contacts(Base):
     name = Column(String, unique=True)
     # Переменная возвращающая все связные строки в таблице message_history
     message_history = relationship('MessageHistory', back_populates="contact")
+    image_id = Column(Integer, ForeignKey('image.id'), default=1)
+    image = relationship('Image', back_populates='contact')
 
     def __init__(self, name):
         self.name = name
@@ -46,6 +48,16 @@ class MessageHistory(Base):
 
     def __repr__(self):
         return '<message_history ({} {} {} {})>'.format(self.to_from, self.contact_id, self.timestamp, self.message)
+
+
+class Image(Base):
+    __tablename__ = 'image'
+    id = Column(Integer, primary_key=True)
+    data = Column(BLOB)
+    contact = relationship('Contacts', back_populates='image')
+
+    def __init__(self, img):
+        self.data = img
 
 
 class DbWorker:
@@ -121,6 +133,25 @@ class ClientWorker(DbWorker):
     def drop_all_contacts(self):
         self.session.query(Contacts).delete()
         self.commit_session()
+
+    def request_image(self, id=1):
+        try:
+            img = self.session.query(Image).filter(Image.id == id).one()
+        except NoResultFound:
+            img = None
+        return img
+
+    def add_image(self, byte_image=b''):
+        if byte_image:
+            new_image = Image(byte_image)
+            self.session.add(new_image)
+            self.commit_session()
+
+    def update_my_image(self, byte_image=b''):
+        if byte_image:
+            img = self.request_image(1)
+            img.data = byte_image
+            self.commit_session()
 
     def add_contact(self, name):
         """

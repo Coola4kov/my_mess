@@ -1,8 +1,9 @@
 from client_v3 import Client
 
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtCore import QObject, QThread, pyqtSlot, pyqtSignal,  QMutex, Qt
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
+from PyQt5.QtCore import QObject, QThread, pyqtSlot, pyqtSignal, QMutex, Qt, QByteArray, QBuffer
+from PyQt5.QtGui import QPixmap, QImage
 from queue import Queue
 
 import sys
@@ -11,6 +12,7 @@ import time
 
 from system.decorators import mute
 from system.config import *
+from image_worker import PictureImage
 
 mute_ = QMutex()
 
@@ -115,7 +117,7 @@ class ReceiverHandler(QObject):
 class ChatWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        uic.loadUi('system/gui/chat.ui', self)
+        uic.loadUi('system/gui/chat_test.ui', self)
         self.listContacts.setSortingEnabled(True)
         self.selected_item_row = None
         self.selected_item_text = ""
@@ -128,10 +130,26 @@ class ChatWindow(QtWidgets.QMainWindow):
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @pyqtSlot()
-    def set_buttons_enabled(self):
-        for el in [self.pushDelete, self.pushAdd, self.pushSend, self.pushCancle]:
+    def set_qt_elements_enabled(self, contacts=True, chat=False, actions=True, smiles=False):
+        elemets = []
+        if contacts:
+            contacts_button = [self.pushDelete, self.pushAdd]
+            elemets += contacts_button
+        if chat:
+            chat_buttons = [self.pushSend, self.pushCancle]
+            elemets += chat_buttons
+        if actions:
+            actions_ = [self.actionItalic, self.actionBold, self.actionUlined, self.actionOpen]
+            elemets += actions_
+        if smiles:
+            smiles_ = [self.actionSmile, self.actionCrazy, self.actionSad]
+            elemets += smiles_
+        for el in elemets:
             el.setEnabled(True)
+
+    def enable_chat_elements(self):
         self.textChatEdit.setReadOnly(False)
+        self.set_qt_elements_enabled(False, True, False, True)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -159,12 +177,16 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.listContacts.sortItems()
 
     def display_contacts(self):
-        if self.auth.action_success:
-            mute_.lock()
-            client.start_client(self.auth.user)
-            mute_.unlock()
-            list_of_contacts = client.get_all_contacts()
-            self.fill_the_list(list_of_contacts)
+        try:
+            if self.auth.action_success:
+                mute_.lock()
+                client.start_client(self.auth.user)
+                mute_.unlock()
+                self.load_my_image()
+                list_of_contacts = client.get_all_contacts()
+                self.fill_the_list(list_of_contacts)
+        except Exception as e:
+            print(e)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -189,11 +211,14 @@ class ChatWindow(QtWidgets.QMainWindow):
             self.append_to_text(m['timestamp'], chat_name, m['message'])
 
     def open_a_chat_window(self):
-        self.get_selected_list_item()
-        self.chatName.setText(self.selected_item_text)
-        self.chatDisplay.clear()
-        self.load_chat_history()
-
+        try:
+            self.get_selected_list_item()
+            self.enable_chat_elements()
+            self.chatName.setText(self.selected_item_text)
+            self.chatDisplay.clear()
+            self.load_chat_history()
+        except Exception as e:
+            print(e)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def add_item_to_list(self):
@@ -237,7 +262,6 @@ class ChatWindow(QtWidgets.QMainWindow):
 
     def get_chat_text(self):
         # забираем данные из строки ввода текста
-        # document = self.textChatEdit.toPlainText()
         document = self.parsing_html(self.textChatEdit.toHtml())
         print(document)
         # очищаем строку ввода текста
@@ -307,10 +331,40 @@ class ChatWindow(QtWidgets.QMainWindow):
     def crz_smile(self):
         self.smile('crazy')
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def show_open_f_dialog(self):
+        fnames = QFileDialog.getOpenFileName(self, 'Open MY file')
+        fname = fnames[0]
+        pic = PictureImage(fname, 150, 150)
+        self.update_my_image(pic.bytes_return())
+        pixmap = self.image_out_of_byte(pic.bytes_return())
+        self.myLabel.setPixmap(pixmap)
+
+    def image_out_of_byte(self, byte_image=b''):
+        if byte_image:
+            img_ = QImage.fromData(byte_image, 'PNG')
+            pixmap = QPixmap.fromImage(img_)
+        else:
+            pixmap = None
+        return pixmap
+
+    def update_my_image(self, img):
+        if client.client_db.request_image(1):
+            client.client_db.update_my_image(img)
+        else:
+            client.client_db.add_image(img)
+
+    def load_my_image(self):
+        try:
+            img = client.client_db.request_image(1)
+            if img:
+                pixmap = self.image_out_of_byte(img.data)
+                self.myLabel.setPixmap(pixmap)
+        except Exception as e:
+            print(e)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def start(self):
         self.actionLogin.triggered.connect(self.auth.action)
@@ -318,7 +372,7 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.auth.notifier.rejected.connect(self.display_contacts)
         self.auth.notifier.rejected.connect(self.receiver_thread_start)
         self.receiver.gotData.connect(self.thread_receiver_handle)
-        self.auth.Signal.connect(self.set_buttons_enabled)
+        self.auth.Signal.connect(self.set_qt_elements_enabled)
         self.listContacts.itemDoubleClicked.connect(self.open_a_chat_window)
         self.listContacts.itemClicked.connect(self.get_selected_list_item)
         self.pushAdd.clicked.connect(self.add_item_to_list)
@@ -328,12 +382,14 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.actionItalic.triggered.connect(self.make_italic)
         self.actionBold.triggered.connect(self.make_bold)
         self.actionUlined.triggered.connect(self.make_under)
-        self.actionsmile.triggered.connect(self.reg_smile)
-        self.actionsad.triggered.connect(self.sad_smile)
-        self.actioncrazy.triggered.connect(self.crz_smile)
+        self.actionSmile.triggered.connect(self.reg_smile)
+        self.actionSad.triggered.connect(self.sad_smile)
+        self.actionCrazy.triggered.connect(self.crz_smile)
+        self.actionOpen.triggered.connect(self.show_open_f_dialog)
 
 
 if __name__ == '__main__':
+
     app = QtWidgets.QApplication(sys.argv)
     client = Client()
     window = ChatWindow()
