@@ -5,6 +5,9 @@ import sys
 import hashlib
 import binascii
 
+from string import ascii_uppercase
+from random import choice
+
 from system.errors import DecodedMessageError, ClosedSocketError
 from system.config import *
 
@@ -253,6 +256,22 @@ class JIMMessage(Message):
         self.dict_message = self._create_message(method, True, **body)
         return self._end_of_creating()
 
+    def create_img_message(self, picture_len):
+        body = {IMG_ID: self._generate_uniq_id(), IMG_PCS: picture_len/500}
+        self.dict_message = self._create_message(IMG, True, **body)
+        return self._end_of_creating()
+
+    def create_img_parts(self, data = '', seq=1, id_=''):
+        body = {IMG_ID: id_, IMG_SEQ: seq, IMG_DATA: data}
+        self.dict_message = self._create_message(IMG_PARTS, False, **body)
+        return self._end_of_creating()
+
+    @staticmethod
+    def _generate_uniq_id():
+        digit_part = int(time.time())
+        letter_part = ''.join(choice(ascii_uppercase) for _ in range(3))
+        return str(digit_part) + letter_part
+
     def _end_of_creating(self):
         self.encode_message()
         return self.dict_message
@@ -406,7 +425,10 @@ if __name__ == '__main__':
     # print(s.getpeername())
     # s.close()
     m = JIMMessage()
-    s = open_client_socket('localhost', 7777)
-    m.create_auth_reg_message('MUSEUN', 'test_lol', registration=True)
-    m.send_rcv_message(s)
-    print(m.dict_message)
+    # s = open_client_socket('localhost', 7777)
+    # m.create_auth_reg_message('MUSEUN', 'test_lol', registration=True)
+    # m.send_rcv_message(s)
+    # print(m.dict_message)
+    print(m.create_img_message(3205))
+    img_id = m.dict_message[IMG_ID]
+    print(m.create_img_parts('hjkasdfhjkasdhjkashjkas', 5, img_id))

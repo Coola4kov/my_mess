@@ -12,7 +12,7 @@ import time
 
 from system.decorators import mute
 from system.config import *
-from image_worker import PictureImage
+from system.image_worker import PictureImage
 
 mute_ = QMutex()
 
@@ -333,14 +333,6 @@ class ChatWindow(QtWidgets.QMainWindow):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def show_open_f_dialog(self):
-        fnames = QFileDialog.getOpenFileName(self, 'Open MY file')
-        fname = fnames[0]
-        pic = PictureImage(fname, 150, 150)
-        self.update_my_image(pic.bytes_return())
-        pixmap = self.image_out_of_byte(pic.bytes_return())
-        self.myLabel.setPixmap(pixmap)
-
     def image_out_of_byte(self, byte_image=b''):
         if byte_image:
             img_ = QImage.fromData(byte_image, 'PNG')
@@ -350,19 +342,31 @@ class ChatWindow(QtWidgets.QMainWindow):
         return pixmap
 
     def update_my_image(self, img):
+        """
+        Обновляется клиентское изображение в базе данных
+        """
         if client.client_db.request_image(1):
             client.client_db.update_my_image(img)
         else:
             client.client_db.add_image(img)
 
+    def show_open_f_dialog(self):
+        fnames = QFileDialog.getOpenFileName(self, 'Open MY file')
+        fname = fnames[0]
+        pic = PictureImage(fname, 150, 150)
+        self.update_my_image(pic.cropped_bytes_return())
+        pixmap = self.image_out_of_byte(pic.cropped_bytes_return())
+        self.myLabel.setPixmap(pixmap)
+
     def load_my_image(self):
-        try:
-            img = client.client_db.request_image(1)
-            if img:
-                pixmap = self.image_out_of_byte(img.data)
-                self.myLabel.setPixmap(pixmap)
-        except Exception as e:
-            print(e)
+        """
+        Выгружается клиентское изображение из базы данных
+        :return:
+        """
+        img = client.client_db.request_image(1)
+        if img:
+            pixmap = self.image_out_of_byte(img.data)
+            self.myLabel.setPixmap(pixmap)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
