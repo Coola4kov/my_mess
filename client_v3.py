@@ -229,11 +229,25 @@ class Client(metaclass=ClientVerifier):
                         print('Клиент удален')
                 else:
                     print('Не удаётся удалить клиента')
+            elif action == 'img':
+                self.img_announce()
+            elif action == 'img_send':
+                id_ = input('>>Введите ID изображения')
+                self.img_send(id_)
             elif action == 'end':
                 self.alive = False
                 break
             else:
                 print('Не верное действие')
+
+    def img_announce(self):
+        self.m.create_img_message(100)
+        self.m.send_message(self.sock)
+        print(self.m.dict_message[IMG_ID])
+
+    def img_send(self, img_id, part='', seq=1):
+        self.m.create_img_parts_message(data='HELLO', seq=seq, id_=img_id)
+        self.m.send_message(self.sock)
 
 
 if __name__ == '__main__':

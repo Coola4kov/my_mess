@@ -257,11 +257,14 @@ class JIMMessage(Message):
         return self._end_of_creating()
 
     def create_img_message(self, picture_len):
-        body = {IMG_ID: self._generate_uniq_id(), IMG_PCS: picture_len/500}
+        len_ = picture_len // 500
+        if (picture_len / 500) % 1 > 0:
+            len_ += 1
+        body = {IMG_ID: self._generate_uniq_id(), IMG_PCS: len_}
         self.dict_message = self._create_message(IMG, True, **body)
         return self._end_of_creating()
 
-    def create_img_parts(self, data = '', seq=1, id_=''):
+    def create_img_parts_message(self, data = '', seq=1, id_=''):
         body = {IMG_ID: id_, IMG_SEQ: seq, IMG_DATA: data}
         self.dict_message = self._create_message(IMG_PARTS, False, **body)
         return self._end_of_creating()
@@ -286,7 +289,7 @@ class JIMResponse(Message):
         check_methods = {PRESENCE: self._presence_check, MSG: self._msg_check, GET_CONTACTS: self._get_contacts_check,
                          ADD_CONTACT: self._add_contact_check, DEL_CONTACT: self._del_contact_check,
                          JOIN: self._join_check, LEAVE: self._leave_check, AUTH: self._auth_check,
-                         REGISTER: self._reg_check}
+                         REGISTER: self._reg_check, IMG: self._img_check, IMG_PARTS: self._img_parts_check}
         # Метод для осущеснтвления проверки достаём из типа ACTION, пришедшего в сообщении
         method = check_methods.get(self.dict_message.get(ACTION))
         if method:
@@ -389,6 +392,26 @@ class JIMResponse(Message):
             action = None
         return action
 
+    def _img_check(self):
+        if self.dict_message.get(ACTION) == IMG \
+                and TIME in self.dict_message \
+                and IMG_ID in self.dict_message \
+                and IMG_PCS in self.dict_message:
+            action = IMG
+        else:
+            action = None
+        return action
+
+    def _img_parts_check(self):
+        if self.dict_message.get(ACTION) == IMG_PARTS \
+                and IMG_ID in self.dict_message \
+                and IMG_SEQ in self.dict_message \
+                and IMG_DATA in self.dict_message:
+            action = IMG_PARTS
+        else:
+            action = None
+        return action
+
     def response_message_create(self, sock, code=OK, with_message=True, message_text='Ok', quantity=0,
                                 send_message=True):
         """
@@ -431,4 +454,4 @@ if __name__ == '__main__':
     # print(m.dict_message)
     print(m.create_img_message(3205))
     img_id = m.dict_message[IMG_ID]
-    print(m.create_img_parts('hjkasdfhjkasdhjkashjkas', 5, img_id))
+    print(m.create_img_parts_message('hjkasdfhjkasdhjkashjkas', 5, img_id))
