@@ -129,6 +129,7 @@ class Message:
         # print('Кодированное сообщение', self.encoded_message)
         json_message = self.encoded_message.decode(self.encoding)
         try:
+            print(json_message)
             decoded_message = json.loads(json_message)
         except json.decoder.JSONDecodeError:
             raise DecodedMessageError
@@ -264,7 +265,7 @@ class JIMMessage(Message):
         self.dict_message = self._create_message(IMG, True, **body)
         return self._end_of_creating()
 
-    def create_img_parts_message(self, data = '', seq=1, id_=''):
+    def create_img_parts_message(self, data='', seq=1, id_=''):
         body = {IMG_ID: id_, IMG_SEQ: seq, IMG_DATA: data}
         self.dict_message = self._create_message(IMG_PARTS, False, **body)
         return self._end_of_creating()

@@ -1,9 +1,7 @@
-# import sys
 import select
 import socket
 import logging
 import time
-import copy
 
 from threading import Thread
 from queue import Queue
@@ -13,6 +11,7 @@ from system.errors import ClosedSocketError, WrongPortError, WrongInterfaceError
 from system.db import server_db_worker
 from system.metaclasses import ServerVerifier
 from system.config import *
+from system.image_worker import ImageWorker
 
 log_server = logging.getLogger('messenger.server')
 server_db = server_db_worker.ServerWorker('sqlite:///system/db/server_db.db?check_same_thread=False')
@@ -29,6 +28,7 @@ class Handler(Thread):
         self.sock = None
         self.clients = None
         self.active = True
+        self.img_worker = None
         self.img_parts = {}
 
     def _get_from_queue(self):
@@ -59,10 +59,9 @@ class Handler(Thread):
             self._auth_handle()
         elif self.action == REGISTER:
             self._register_handle()
-        elif self.action == IMG:
-            self._img_handle()
-        elif self.action == IMG_PARTS:
-            self._img_parts_handle()
+        elif self.action == IMG or self.action == IMG_PARTS:
+            self.img_worker = ImageWorker(self.sock, self.message, self.img_parts)
+            self.img_worker.handle(self.action)
         else:
             self.message.response_message_create(self.sock, WRONG_REQUEST)
 
@@ -186,43 +185,6 @@ class Handler(Thread):
                 print('Клиента с таким сокетом не существует')
                 self.message.response_message_create(self.sock, WRONG_REQUEST,
                                                      message_text='Сокет не зарегистрирован')
-
-    def _img_handle(self):
-        self.img_parts.update({self.message.dict_message[IMG_ID]: {IMG_PCS: self.message.dict_message[IMG_PCS],
-                                                                   TIME: self.message.dict_message[TIME],
-                                                                   IMG_SEQ: 0, IMG_DATA: []}})
-        time_keeper = Thread(target=self._img_parts_time_keeper)
-        time_keeper.start()
-        print(self.img_parts)
-
-    def _img_parts_time_keeper(self):
-        delete_list = []
-        for id_ in self.img_parts:
-            if time.time() - self.img_parts[id_][TIME] > 30:
-                delete_list.append(id_)
-        tmp_dict = copy.deepcopy(self.img_parts)
-        for i in delete_list:
-            del tmp_dict[i]
-        self.img_parts = tmp_dict
-
-    # TODO заончить прототип
-    def _img_parts_handle(self):
-        id_ = self.message.dict_message[IMG_ID]
-        if id_ in self.img_parts:
-            if self.img_parts[id_][IMG_SEQ] + 1 == self.message.dict_message[IMG_SEQ]\
-                    and self.img_parts[id_][IMG_PCS] <= self.message.dict_message[IMG_SEQ]:
-                self.img_parts[id_][IMG_SEQ] += 1
-                self.img_parts[id_][IMG_DATA].append(self.message.dict_message[IMG_DATA])
-            else:
-                print("Части изображения не последовательны или количество элементов больше заданного количества")
-        else:
-            print('id {} нет в системе')
-        if self.img_parts[id_][IMG_SEQ] == self.img_parts[id_][IMG_PCS]:
-            self._build_whole_message(id_)
-        # self.img_parts.get(self.message.dict_message[IMG_ID])
-
-    def _build_whole_message(self, id_):
-        print(''.join(self.img_parts[id_][IMG_DATA]))
 
     def run(self):
         print("i'm running")

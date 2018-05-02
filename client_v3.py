@@ -8,9 +8,10 @@ import sqlalchemy.exc
 from threading import Thread, Lock
 from queue import Queue
 
-from system.jim_v2 import JIMMessage, find_cli_key_and_argument, get_safe_hash
+from system.jim_v2 import JIMMessage, JIMResponse, find_cli_key_and_argument, get_safe_hash
 from system.metaclasses import ClientVerifier
 from system.errors import WrongPortError
+from system.image_worker import ImageWorker
 from system.db.client_db_worker import ClientWorker
 from system.config import *
 
@@ -39,8 +40,9 @@ class Client(metaclass=ClientVerifier):
         self.hostname, self.port = self._cli_param_get()
         self.username = ''
         self.client_db = None
+        self.img_parts = {}
         self.m = JIMMessage()
-        self.m_r = JIMMessage()
+        self.m_r = JIMResponse()
         self.sock = self.open_client_socket()
 
     def _cli_param_get(self):
@@ -201,6 +203,9 @@ class Client(metaclass=ClientVerifier):
                     print(self.m_r.dict_message)
                     queue.put(self.m_r.dict_message)
                     self.m_r.clean_buffer()
+                elif self.m_r.dict_message[ACTION] == IMG or self.m_r.dict_message[ACTION] == IMG_PARTS:
+                    img_receiver = ImageWorker(self.sock, self.m_r, self.img_parts)
+                    img_receiver.handle(self.m_r.dict_message[ACTION])
 
     def cli_interact(self):
         while self.alive:
@@ -230,24 +235,14 @@ class Client(metaclass=ClientVerifier):
                 else:
                     print('Не удаётся удалить клиента')
             elif action == 'img':
-                self.img_announce()
-            elif action == 'img_send':
-                id_ = input('>>Введите ID изображения')
-                self.img_send(id_)
+                base64_to_send = input('>>Введите base64 код для отправки: ')
+                img_sender = ImageWorker(self.sock, self.m, self.img_parts)
+                img_sender.img_send(base64_to_send)
             elif action == 'end':
                 self.alive = False
                 break
             else:
                 print('Не верное действие')
-
-    def img_announce(self):
-        self.m.create_img_message(100)
-        self.m.send_message(self.sock)
-        print(self.m.dict_message[IMG_ID])
-
-    def img_send(self, img_id, part='', seq=1):
-        self.m.create_img_parts_message(data='HELLO', seq=seq, id_=img_id)
-        self.m.send_message(self.sock)
 
 
 if __name__ == '__main__':
