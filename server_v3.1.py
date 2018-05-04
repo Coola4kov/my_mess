@@ -33,7 +33,6 @@ class Handler(Thread):
 
     def _get_from_queue(self):
         item = self.queue.get()
-        print(item)
         self.message = JIMResponse(item['text'])
         self.action = item['action']
         self.sock = item['sock']

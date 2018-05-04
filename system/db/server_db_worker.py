@@ -26,6 +26,7 @@ class Client(Base):
     login = Column(String,  unique=True)
     info = Column(String)
     sockets = relationship('ClientOnline', back_populates="client")
+    client_img = relationship('ClientImg', back_populates='client')
     # для доступа к данным из таблицы client_history в серверной базе данных
     client_history = relationship("ClientHistory", back_populates="client")
     # для доступа к данным (список контактов выбранного клиента) из таблицы contact_lists в серверной базе данных
@@ -46,6 +47,17 @@ class Client(Base):
 
     def __repr__(self):
         return "<Client ({}, {}) >".format(self.login, self.info)
+
+
+class ClientImg(Base):
+    __tablename__ = 'client_img'
+    client_id = Column(Integer, ForeignKey('client.id'), primary_key=True)
+    img_base64 = Column(String, primary_key=True)
+    client = relationship('Client', back_populates='client_img')
+
+    def __init__(self, client, img_base64):
+        self.client = client
+        self.img_base64 = img_base64
 
 
 class ClientHistory(Base):
@@ -246,6 +258,25 @@ class ServerWorker(DbWorker):
         edited_hash.hashpass = hash_
         self.commit_session()
 
+    def get_client_img(self, client_login):
+        client = self.request_client(client_login)
+        if client:
+            return client.client_img[0]
+        else:
+            return None
+
+    def write_client_img(self, client_login, img):
+        client = self.request_client(client_login)
+        new_client_img = ClientImg(client, img)
+        self.session.add(new_client_img)
+        self.commit_session()
+
+    def update_client_img(self, client_login, img):
+        client = self.request_client(client_login)
+        edited_img = self.session.query(ClientImg).filter(ClientImg.client_id == client.id).one()
+        edited_img.img_base64 = img
+        self.commit_session()
+
     def get_room_members(self, room_title):
         room = self.request_room(room_title)
         return [client.login for client in room.room_members]
@@ -271,10 +302,13 @@ class ServerWorker(DbWorker):
 if __name__ == '__main__':
     test = ServerWorker('sqlite:///server_db.db')
     # test.add_client('son', 'nothing')
-    print(test.get_client_hash('test').hashpass)
+    # test.write_client_img('test', '123456')
+    img = test.get_client_img('test')
+    print(img.img_base64)
+    # print(test.get_client_hash('test').hashpass)
     # test.get_client_hash('test')
-    test.update_client_hash('test', '99999')
+    # test.update_client_hash('test', '99999')
     # test.register_new_hash('12345', '956845987')
-    print(test.get_client_hash('12345'))
-    test.update_client_hash('MUSEUN', '11111')
-    print(test.get_client_hash('MUSEUN'))
+    # print(test.get_client_hash('12345'))
+    # test.update_client_hash('MUSEUN', '11111')
+    # print(test.get_client_hash('MUSEUN'))

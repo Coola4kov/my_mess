@@ -155,7 +155,7 @@ class Message:
         self.encoded_message = sock.recv(1024)
         if not self.encoded_message:
             raise ClosedSocketError(sock)
-        # print(self.encoded_message)
+        print(self.encoded_message)
         self.decode_message()
         return self.dict_message
 
@@ -257,11 +257,11 @@ class JIMMessage(Message):
         self.dict_message = self._create_message(method, True, **body)
         return self._end_of_creating()
 
-    def create_img_message(self, picture_len):
+    def create_img_message(self, picture_len, contact_name):
         len_ = picture_len // 500
         if (picture_len / 500) % 1 > 0:
             len_ += 1
-        body = {IMG_ID: self._generate_uniq_id(), IMG_PCS: len_}
+        body = {IMG_ID: self._generate_uniq_id(), IMG_PCS: len_, USER_ID: contact_name}
         self.dict_message = self._create_message(IMG, True, **body)
         return self._end_of_creating()
 
@@ -425,7 +425,9 @@ class JIMResponse(Message):
                 msg = {QUANTITY: quantity}
             else:
                 msg = {ERROR: message_text}
-            self.dict_message = msg
+        else:
+            msg = {}
+        self.dict_message = msg
         self.dict_message.update({RESPONSE: code})
         if code != ACCEPTED:
             self.dict_message.update(time=int(time.time()))
@@ -453,6 +455,6 @@ if __name__ == '__main__':
     # m.create_auth_reg_message('MUSEUN', 'test_lol', registration=True)
     # m.send_rcv_message(s)
     # print(m.dict_message)
-    print(m.create_img_message(3205))
+    print(m.create_img_message(3205, 'test'))
     img_id = m.dict_message[IMG_ID]
     print(m.create_img_parts_message('hjkasdfhjkasdhjkashjkas', 5, img_id))

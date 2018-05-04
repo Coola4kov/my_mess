@@ -44,6 +44,7 @@ class Client(metaclass=ClientVerifier):
         self.m = JIMMessage()
         self.m_r = JIMResponse()
         self.sock = self.open_client_socket()
+        self.img_sender = ImageWorker(self.sock, self.m, self.img_parts)
 
     def _cli_param_get(self):
         """
@@ -236,8 +237,8 @@ class Client(metaclass=ClientVerifier):
                     print('Не удаётся удалить клиента')
             elif action == 'img':
                 base64_to_send = input('>>Введите base64 код для отправки: ')
-                img_sender = ImageWorker(self.sock, self.m, self.img_parts)
-                img_sender.img_send(base64_to_send)
+                # img_sender = ImageWorker(self.sock, self.m, self.img_parts)
+                self.img_sender.img_send(base64_to_send)
             elif action == 'end':
                 self.alive = False
                 break

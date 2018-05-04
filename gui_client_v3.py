@@ -12,7 +12,7 @@ import time
 
 from system.decorators import mute
 from system.config import *
-from system.image_worker import PictureImage
+from system.image_worker import PictureImage, ImageWorker
 
 mute_ = QMutex()
 
@@ -355,6 +355,10 @@ class ChatWindow(QtWidgets.QMainWindow):
         fname = fnames[0]
         pic = PictureImage(fname, 150, 150)
         self.update_my_image(pic.cropped_bytes_return())
+        # print(pic.base64_encode())
+        mute_.lock()
+        client.img_sender.img_send(str(pic.base64_encode()), self.auth.user)
+        mute_.unlock()
         pixmap = self.image_out_of_byte(pic.cropped_bytes_return())
         self.myLabel.setPixmap(pixmap)
 

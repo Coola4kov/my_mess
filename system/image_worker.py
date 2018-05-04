@@ -41,7 +41,7 @@ class PictureImage:
     def cropped_bytes_return(self):
         stream = io.BytesIO()
         self.img.save(stream, 'PNG')
-        img_bytes = streamessage.getvalue()
+        img_bytes = stream.getvalue()
         return img_bytes
 
     def base64_encode(self):
@@ -50,7 +50,7 @@ class PictureImage:
         return decoded_bytes.decode()
 
     @staticmethod
-    def base64_decode(img_sging):
+    def base64_decode(img_string):
         decoded_bytes = img_string.encode()
         img_bytes = base64.decodebytes(decoded_bytes)
         return img_bytes
@@ -61,6 +61,7 @@ class ImageWorker:
         self.img_parts = img_parts
         self.sock = sock
         self.message = message
+        self.whole_received_img = ''
 
     def handle(self, action):
         if action == IMG:
@@ -99,15 +100,15 @@ class ImageWorker:
                 print("Части изображения не последовательны или количество элементов больше заданного количества")
         else:
             print('id {} нет в системе')
+        self.message.response_message_create(self.sock, OK, False)
         if self.img_parts[id_][IMG_SEQ] == self.img_parts[id_][IMG_PCS]:
             self._build_whole_message(id_)
-        self.message.response_message_create(self.sock, OK, False)
 
     def _build_whole_message(self, id_):
-        print(''.join(self.img_parts[id_][IMG_DATA]))
+        self.whole_received_img = ''.join(self.img_parts[id_][IMG_DATA])
 
-    def _img_announce_send(self, img_len):
-        self.message.create_img_message(img_len)
+    def _img_announce_send(self, img_len, contact_name):
+        self.message.create_img_message(img_len, contact_name)
         id_ = self.message.dict_message[IMG_ID]
         self.message.send_rcv_message(self.sock)
         return id_
@@ -120,9 +121,9 @@ class ImageWorker:
     def _split_img(img_base64='', img_len=0):
         return [img_base64[i:i+500] for i in range(0, img_len, 500)]
 
-    def img_send(self, img_base64=''):
+    def img_send(self, img_base64='', contact_name='test'):
         img_len = len(img_base64)
-        id_ = self._img_announce_send(img_len)
+        id_ = self._img_announce_send(img_len, contact_name)
         splitted_img = self._split_img(img_base64, img_len)
         for seq, part in enumerate(splitted_img):
             self._img_part_send(id_, part, seq+1)
