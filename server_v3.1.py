@@ -61,6 +61,9 @@ class Handler(Thread):
         elif self.action == IMG or self.action == IMG_PARTS:
             self.img_worker = ImageWorker(self.sock, self.message, self.img_parts)
             self.img_worker.handle(self.action)
+            if self.img_worker.whole_received_img:
+                server_db.write_client_img(self.img_worker.whole_received_img[USER_ID],
+                                           self.img_worker.whole_received_img[IMG])
         else:
             self.message.response_message_create(self.sock, WRONG_REQUEST)
 

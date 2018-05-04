@@ -61,7 +61,7 @@ class ImageWorker:
         self.img_parts = img_parts
         self.sock = sock
         self.message = message
-        self.whole_received_img = ''
+        self.whole_received_img = {}
 
     def handle(self, action):
         if action == IMG:
@@ -71,6 +71,7 @@ class ImageWorker:
 
     def img_handle(self):
         self.img_parts.update({self.message.dict_message[IMG_ID]: {IMG_PCS: self.message.dict_message[IMG_PCS],
+                                                                   USER_ID: self.message.dict_message[USER_ID],
                                                                    TIME: self.message.dict_message[TIME],
                                                                    IMG_SEQ: 0, IMG_DATA: []}})
         self.message.response_message_create(self.sock, OK, True, 'Ok')
@@ -105,7 +106,7 @@ class ImageWorker:
             self._build_whole_message(id_)
 
     def _build_whole_message(self, id_):
-        self.whole_received_img = ''.join(self.img_parts[id_][IMG_DATA])
+        self.whole_received_img = {USER_ID: self.img_parts[id_][USER_ID], IMG: ''.join(self.img_parts[id_][IMG_DATA])}
 
     def _img_announce_send(self, img_len, contact_name):
         self.message.create_img_message(img_len, contact_name)
