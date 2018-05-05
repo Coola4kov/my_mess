@@ -129,7 +129,7 @@ class Message:
         # print('Кодированное сообщение', self.encoded_message)
         json_message = self.encoded_message.decode(self.encoding)
         try:
-            print(json_message)
+            # print(json_message)
             decoded_message = json.loads(json_message)
         except json.decoder.JSONDecodeError:
             raise DecodedMessageError
@@ -224,6 +224,10 @@ class JIMMessage(Message):
         self.dict_message = self._create_message(GET_CONTACTS)
         return self._end_of_creating()
 
+    def create_get_contact_img_message(self):
+        self.dict_message = self._create_message(GET_CONTACTS_IMG)
+        return self._end_of_creating()
+
     def create_change_contact_message(self, username='basic_user', add=True):
         body = {USER_ID: username}
         if add:
@@ -290,7 +294,9 @@ class JIMResponse(Message):
         check_methods = {PRESENCE: self._presence_check, MSG: self._msg_check, GET_CONTACTS: self._get_contacts_check,
                          ADD_CONTACT: self._add_contact_check, DEL_CONTACT: self._del_contact_check,
                          JOIN: self._join_check, LEAVE: self._leave_check, AUTH: self._auth_check,
-                         REGISTER: self._reg_check, IMG: self._img_check, IMG_PARTS: self._img_parts_check}
+                         REGISTER: self._reg_check, IMG: self._img_check, IMG_PARTS: self._img_parts_check,
+                         GET_CONTACTS_IMG: self._get_contacts_img_check}
+
         # Метод для осущеснтвления проверки достаём из типа ACTION, пришедшего в сообщении
         method = check_methods.get(self.dict_message.get(ACTION))
         if method:
@@ -361,6 +367,14 @@ class JIMResponse(Message):
             action = None
         return action
 
+    def _get_contacts_img_check(self):
+        if self.dict_message.get(ACTION) == GET_CONTACTS_IMG \
+               and TIME in self.dict_message:
+            action = GET_CONTACTS_IMG
+        else:
+            action = None
+        return action
+
     def _presence_check(self):
         """
         Проверка на правильный формат presence сообщения
@@ -413,7 +427,7 @@ class JIMResponse(Message):
             action = None
         return action
 
-    def response_message_create(self, sock, code=OK, with_message=True, message_text='Ok', quantity=0,
+    def response_message_create(self, sock=None, code=OK, with_message=True, message_text='Ok', quantity=0,
                                 send_message=True):
         """
         Метод создающий сообщения-ответы в зависимости от кода ответа для клиента и других параметров

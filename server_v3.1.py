@@ -45,11 +45,12 @@ class Handler(Thread):
             self._msg_handle()
         elif self.action == GET_CONTACTS:
             self._get_contacts_handle()
+        elif self.action == GET_CONTACTS_IMG:
+            print('Запрос изображений')
         elif self.action == ADD_CONTACT:
             self._add_del_contact_handle()
         elif self.action == DEL_CONTACT:
             self._add_del_contact_handle(False)
-        # TODO протестировать работу новых методов
         elif self.action == JOIN:
             self._join_handle()
         elif self.action == LEAVE:
@@ -61,9 +62,7 @@ class Handler(Thread):
         elif self.action == IMG or self.action == IMG_PARTS:
             self.img_worker = ImageWorker(self.sock, self.message, self.img_parts)
             self.img_worker.handle(self.action)
-            if self.img_worker.whole_received_img:
-                server_db.write_client_img(self.img_worker.whole_received_img[USER_ID],
-                                           self.img_worker.whole_received_img[IMG])
+            self._whole_message_check()
         else:
             self.message.response_message_create(self.sock, WRONG_REQUEST)
 
@@ -187,6 +186,15 @@ class Handler(Thread):
                 print('Клиента с таким сокетом не существует')
                 self.message.response_message_create(self.sock, WRONG_REQUEST,
                                                      message_text='Сокет не зарегистрирован')
+
+    def _whole_message_check(self):
+        if self.img_worker.whole_received_img:
+            if server_db.get_client_img(self.img_worker.whole_received_img[USER_ID]) is None:
+                server_db.write_client_img(self.img_worker.whole_received_img[USER_ID],
+                                           self.img_worker.whole_received_img[IMG])
+            else:
+                server_db.update_client_img(self.img_worker.whole_received_img[USER_ID],
+                                            self.img_worker.whole_received_img[IMG])
 
     def run(self):
         print("i'm running")

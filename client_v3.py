@@ -221,7 +221,7 @@ class Client(metaclass=ClientVerifier):
                     print(i)
             elif action == 'add':
                 new = input('>>Введите имя контакта: ')
-                if self.check_local_contact(new):
+                if not self.check_local_contact(new):
                     if self.change_contact_global(new):
                         self.add_contact_local(new)
                         print('Клиент добавлен')
@@ -229,7 +229,7 @@ class Client(metaclass=ClientVerifier):
                         print('Не удаётся добавить клиента')
             elif action == 'del':
                 del_ = input('>>Введите имя контакта: ')
-                if not self.check_local_contact(del_):
+                if self.check_local_contact(del_):
                     if self.change_contact_global(del_, False):
                         self.del_contact_local(del_)
                         print('Клиент удален')

@@ -33,6 +33,7 @@ IMG_DATA = 'img_data'
 PRESENCE = 'presence'
 MSG = 'msg'
 GET_CONTACTS = 'get_contacts'
+GET_CONTACTS_IMG = 'get_contacts_img'
 CONTACT_LIST = 'contact_list'
 ADD_CONTACT = 'change_contact_global'
 DEL_CONTACT = 'del_contact'
@@ -43,6 +44,7 @@ LEAVE = 'leave'
 PROBE = 'probe'
 AUTH = 'authenticate'
 REGISTER = 'register'
+
 
 # Коды ответов (будут дополняться)
 BASIC_NOTICE = 100
