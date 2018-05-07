@@ -2,6 +2,7 @@ import socket
 import time
 import json
 import sys
+import re
 import hashlib
 import binascii
 
@@ -111,6 +112,7 @@ class Message:
         else:
             self.encoded_message = b""
             self.dict_message = {}
+            self.list_of_dicts = []
 
     def __str__(self):
         """
@@ -136,6 +138,12 @@ class Message:
         self.dict_message = decoded_message
         return decoded_message
 
+    def decode_to_few_messages(self):
+        msg = self.encoded_message.decode(self.encoding)
+        # print(msg)
+        self.list_of_dicts = [json.loads(elmt[0]) for elmt in re.findall(PATTERN, msg)]
+        print(self.list_of_dicts)
+
     def encode_message(self):
         """
         Кодирует сообщение с заданной кодиеровкой, в начале в JSON, после этого в bytes
@@ -153,11 +161,16 @@ class Message:
         Получаем ответ от сервера, если он не ответил, возвратится пустая строка
         """
         self.encoded_message = sock.recv(1024)
+        self.list_of_dicts = []
         if not self.encoded_message:
             raise ClosedSocketError(sock)
         print(self.encoded_message)
-        self.decode_message()
-        return self.dict_message
+        try:
+            self.decode_message()
+            return self.dict_message
+        except DecodedMessageError:
+            self.decode_to_few_messages()
+            return self.list_of_dicts
 
     def send_message(self, sock):
         """

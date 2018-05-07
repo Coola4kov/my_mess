@@ -66,3 +66,5 @@ SMILES = {'smile': 'system/gui/ab.gif',
           'sad': 'system/gui/ac.gif',
           'crazy': 'system/gui/ai.gif'
           }
+
+PATTERN = r'({(?P<msg>[a-zA-Zа-яА-Я0-9\_\-\"\.\,\: ])*({(?P=msg)*})*(?P=msg)*})'

@@ -139,18 +139,33 @@ class Client(metaclass=ClientVerifier):
         self.receive_contact_messages()
 
     def receive_contact_messages(self):
+        """
+        В связи с тем, что контакт_сообщения могут приходить подряд, в этом случае, они будут декодированы и упакованы
+        в список. Поэтому после получения сообщения мы проверяем, если список не пустой, т.о. понимаем, что сообщений
+        было несколько.
+        """
         message_lock.acquire()
         self.m.create_get_contact_message()
         print(self.m.send_rcv_message(self.sock))
         quantity = self.m.dict_message[QUANTITY]
-        for _ in range(quantity):
+        rcvd_qtty = 0
+        while quantity != rcvd_qtty:
             self.m.rcv_message(self.sock)
-            try:
-                self.client_db.add_contact(self.m.dict_message[USER_ID])
-            except sqlalchemy.exc.IntegrityError:
-                print('Клиент уже есть')
-            print(self.m.dict_message)
+            if self.m.list_of_dicts:
+                n = len(self.m.list_of_dicts)
+                for dict_ in self.m.list_of_dicts:
+                    self.add_contact_to_db(dict_)
+            else:
+                self.add_contact_to_db(self.m.dict_message)
+                n = 1
+            rcvd_qtty += n
         message_lock.release()
+
+    def add_contact_to_db(self, dict_message):
+        try:
+            self.client_db.add_contact(dict_message[USER_ID])
+        except sqlalchemy.exc.IntegrityError:
+            print('Клиент уже есть')
 
     def get_all_contacts(self):
         self.client_db.session.rollback()

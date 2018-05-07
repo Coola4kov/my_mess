@@ -61,7 +61,7 @@ class Handler(Thread):
             self._register_handle()
         elif self.action == IMG or self.action == IMG_PARTS:
             self.img_worker = ImageWorker(self.sock, self.message, self.img_parts)
-            self.img_worker.handle(self.action)
+            self.img_worker.hmandle(self.action)
             self._whole_message_check()
         else:
             self.message.response_message_create(self.sock, WRONG_REQUEST)
@@ -164,7 +164,7 @@ class Handler(Thread):
         for contact in contacts:
             contact_info_message.create_server_contact_list(contact.login)
             contact_info_message.send_message(self.sock)
-            time.sleep(0.3)
+            # time.sleep(0.3)
 
     def _add_del_contact_handle(self, add=True):
         new_user = self.message.dict_message[USER_ID]
