@@ -101,9 +101,13 @@ class Message:
         self.encoding = encoding
 
         if message:
+            self.list_of_dicts = []
             if type(message) == bytes:
                 self.encoded_message = message
-                self.dict_message = self.decode_message()
+                try:
+                    self.dict_message = self.decode_message()
+                except:
+                    self.list_of_dicts = self.decode_message()
             elif type(message) == dict:
                 self.dict_message = message
                 self.encoded_message = self.encode_message()
@@ -112,7 +116,6 @@ class Message:
         else:
             self.encoded_message = b""
             self.dict_message = {}
-            self.list_of_dicts = []
 
     def __str__(self):
         """
@@ -140,9 +143,6 @@ class Message:
 
     def decode_to_few_messages(self):
         msg = self.encoded_message.decode(self.encoding)
-        # print(msg)
-        # for elmt in re.findall(PATTERN, msg):
-        #     self.list_of_dicts.append(elmt[0])
         self.list_of_dicts = [json.loads(elmt[0]) for elmt in re.findall(PATTERN, msg)]
         print(self.list_of_dicts)
 

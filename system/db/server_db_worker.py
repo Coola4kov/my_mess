@@ -260,7 +260,7 @@ class ServerWorker(DbWorker):
 
     def get_client_img(self, client_login):
         client = self.request_client(client_login)
-        if client:
+        if client.client_img:
             return client.client_img[0]
         else:
             return None
@@ -303,8 +303,8 @@ if __name__ == '__main__':
     test = ServerWorker('sqlite:///server_db.db')
     # test.add_client('son', 'nothing')
     # test.write_client_img('test', '123456')
-    img = test.get_client_img('test')
-    print(img.img_base64)
+    img = test.get_client_img('MUSEUN')
+    # print(img.img_base64)
     # print(test.get_client_hash('test').hashpass)
     # test.get_client_hash('test')
     # test.update_client_hash('test', '99999')

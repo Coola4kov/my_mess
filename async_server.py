@@ -1,8 +1,9 @@
 import asyncio
 import functools
-import time
+import json
 
 from system.jim_v2 import JIMResponse, JIMMessage, get_safe_hash
+from system.image_worker import ImageWorker
 from system.db import server_db_worker
 from system.config import *
 
@@ -22,7 +23,21 @@ class ServerProtocol(asyncio.Protocol):
         self.transport = transport
 
     def data_received(self, data):
-        self.message = JIMResponse(data)
+        print(data)
+        try:
+            self.message = JIMResponse(data)
+        except:
+            self.message = JIMResponse()
+            self.message.encoded_message = data
+            self.message.decode_to_few_messages()
+        if self.message.list_of_dicts:
+            for i in self.message.list_of_dicts:
+                self.message.dict_message = i
+                self.pass_to_handler()
+        else:
+            self.pass_to_handler()
+
+    def pass_to_handler(self):
         self.action = self.message.dict_message[ACTION]
         print(self.message)
         self.handle_request()
@@ -49,6 +64,10 @@ class ServerProtocol(asyncio.Protocol):
             self._leave_handle()
         elif self.action == REGISTER:
             self._register_handle()
+        elif self.action == IMG or self.action == IMG_PARTS:
+            img_worker = ImageWorker(self.socket, self.message, self.img_parts)
+            img_worker.handle(self.action)
+            self._whole_message_check(img_worker)
         else:
             self.message.response_message_create(code=WRONG_REQUEST, send_message=False)
             self.transport.write(self.message.encoded_message)
@@ -184,6 +203,15 @@ class ServerProtocol(asyncio.Protocol):
             else:
                 self.server_db.add_room(room_name)
         self.transport.write(self.message.encoded_message)
+
+    def _whole_message_check(self, img_worker):
+        if img_worker.whole_received_img:
+            if self.server_db.get_client_img(img_worker.whole_received_img[USER_ID]) is None:
+                self.server_db.write_client_img(img_worker.whole_received_img[USER_ID],
+                                                img_worker.whole_received_img[IMG])
+            else:
+                self.server_db.update_client_img(img_worker.whole_received_img[USER_ID],
+                                                 img_worker.whole_received_img[IMG])
 
 
 def server_run():
