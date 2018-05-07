@@ -121,7 +121,6 @@ class ServerProtocol(asyncio.Protocol):
         for contact in contacts:
             contact_info_message.create_server_contact_list(contact.login)
             self.transport.write(contact_info_message.encoded_message)
-            time.sleep(0.3)
 
     def _add_del_contact_handle(self, add=True):
         new_user = self.message.dict_message[USER_ID]

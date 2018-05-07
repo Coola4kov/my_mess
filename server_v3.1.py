@@ -61,7 +61,7 @@ class Handler(Thread):
             self._register_handle()
         elif self.action == IMG or self.action == IMG_PARTS:
             self.img_worker = ImageWorker(self.sock, self.message, self.img_parts)
-            self.img_worker.hmandle(self.action)
+            self.img_worker.handle(self.action)
             self._whole_message_check()
         else:
             self.message.response_message_create(self.sock, WRONG_REQUEST)
@@ -247,6 +247,12 @@ class Server(metaclass=ServerVerifier):
         server_db.del_sock(sock.fileno())
         clients.remove(sock)
 
+    @staticmethod
+    def _put_to_que(dict_msg, sock, clients):
+        m = JIMResponse(dict_msg)
+        action = m.get_message_action()
+        input_q.put({'action': action, 'sock': sock, 'clients': clients, 'text': m.dict_message})
+
     def read_sock_streams(self, sock_to_read, clients, timeout=0.5):
         """
         Метод для чтения из сокета приходящие сообщения от клиента
@@ -259,9 +265,15 @@ class Server(metaclass=ServerVerifier):
             m = JIMResponse()
             try:
                 m.rcv_message(sock)
-                action = m.get_message_action()
-                print(action)
-                input_q.put({'action': action, 'sock': sock, 'clients': clients, 'text': m.dict_message})
+                if m.list_of_dicts:
+                    for i in m.list_of_dicts:
+                        print(i)
+                        self._put_to_que(i, sock, clients)
+                else:
+                    self._put_to_que(m.dict_message, sock, clients)
+                # action = m.get_message_action()
+                # print(action)
+                # input_q.put({'action': action, 'sock': sock, 'clients': clients, 'text': m.dict_message})
 
             except (ClosedSocketError, ConnectionResetError, ConnectionAbortedError):
                 # если выходит ошибка, значит клиент вышел, не разорвав соединение, удаляем сокет из списка клиентов

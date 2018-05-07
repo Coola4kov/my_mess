@@ -141,6 +141,8 @@ class Message:
     def decode_to_few_messages(self):
         msg = self.encoded_message.decode(self.encoding)
         # print(msg)
+        # for elmt in re.findall(PATTERN, msg):
+        #     self.list_of_dicts.append(elmt[0])
         self.list_of_dicts = [json.loads(elmt[0]) for elmt in re.findall(PATTERN, msg)]
         print(self.list_of_dicts)
 
@@ -160,7 +162,7 @@ class Message:
         """
         Получаем ответ от сервера, если он не ответил, возвратится пустая строка
         """
-        self.encoded_message = sock.recv(1024)
+        self.encoded_message = sock.recv(32768)
         self.list_of_dicts = []
         if not self.encoded_message:
             raise ClosedSocketError(sock)
@@ -179,6 +181,7 @@ class Message:
         if not self.encoded_message:
             self.encode_message()
         try:
+            # print(self.dict_message)
             sock.send(self.encoded_message)
         except ConnectionAbortedError:
             print('Конечная сторона закрыла соединение, сообщение не отправлено')

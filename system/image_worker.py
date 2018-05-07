@@ -101,12 +101,13 @@ class ImageWorker:
                 print("Части изображения не последовательны или количество элементов больше заданного количества")
         else:
             print('id {} нет в системе')
-        self.message.response_message_create(self.sock, OK, False)
+        # self.message.response_message_create(self.sock, OK, False)
         if self.img_parts[id_][IMG_SEQ] == self.img_parts[id_][IMG_PCS]:
             self._build_whole_message(id_)
 
     def _build_whole_message(self, id_):
         self.whole_received_img = {USER_ID: self.img_parts[id_][USER_ID], IMG: ''.join(self.img_parts[id_][IMG_DATA])}
+        print(self.whole_received_img)
 
     def _img_announce_send(self, img_len, contact_name):
         self.message.create_img_message(img_len, contact_name)
@@ -116,7 +117,8 @@ class ImageWorker:
 
     def _img_part_send(self, img_id, img_base64='', seq=1):
         self.message.create_img_parts_message(data=img_base64, seq=seq, id_=img_id)
-        self.message.send_rcv_message(self.sock)
+        # self.message.send_rcv_message(self.sock)
+        self.message.send_message(self.sock)
 
     @staticmethod
     def _split_img(img_base64='', img_len=0):
