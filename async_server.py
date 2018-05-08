@@ -27,6 +27,7 @@ class ServerProtocol(asyncio.Protocol):
         try:
             self.message = JIMResponse(data)
         except:
+            # не получается отловить exception в другом, не асинхронном модуле jim_v2.py.
             self.message = JIMResponse()
             self.message.encoded_message = data
             self.message.decode_to_few_messages()
