@@ -33,7 +33,7 @@ IMG_DATA = 'img_data'
 PRESENCE = 'presence'
 MSG = 'msg'
 GET_CONTACTS = 'get_contacts'
-GET_CONTACTS_IMG = 'get_contacts_img'
+GET_CONTACT_IMG = 'get_contact_img'
 CONTACT_LIST = 'contact_list'
 ADD_CONTACT = 'change_contact_global'
 DEL_CONTACT = 'del_contact'
@@ -62,9 +62,11 @@ RESPONSE_CODES = (BASIC_NOTICE, OK, ACCEPTED, WRONG_REQUEST, SERVER_ERROR, CONFL
 # глобальные переменные
 SALT = "F`:z6j)BuB9#8$eV"
 
+# расположение смайлов
 SMILES = {'smile': 'system/gui/ab.gif',
           'sad': 'system/gui/ac.gif',
           'crazy': 'system/gui/ai.gif'
           }
 
+# Паттерн для разбивки склееных сообщений с помощью re
 PATTERN = r'({(?P<msg>[a-zA-Zа-яА-Я0-9\_\-\"\.\,\:\+\\\/\\n\= ])*({(?P=msg)*})*(?P=msg)*})'

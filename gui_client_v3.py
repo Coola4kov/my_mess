@@ -4,15 +4,16 @@ from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5.QtCore import QObject, QThread, pyqtSlot, pyqtSignal, QMutex, Qt, QByteArray, QBuffer
 from PyQt5.QtGui import QPixmap, QImage
-from queue import Queue
 
 import sys
 import re
+import os
 import time
 
 from system.decorators import mute
 from system.config import *
 from system.image_worker import PictureImage, ImageWorker
+from system.jim_v2 import JIMMessage
 
 mute_ = QMutex()
 
@@ -91,7 +92,7 @@ class AuthReg(QtWidgets.QDialog):
 
 
 class ReceiverHandler(QObject):
-    gotData = pyqtSignal()
+    gotData = pyqtSignal(dict)
     finished = pyqtSignal(int)
 
     def __init__(self):
@@ -104,14 +105,26 @@ class ReceiverHandler(QObject):
             try:
                 mute_.lock()
                 client.sock.settimeout(0.5)
-                data = client.m_r.rcv_message(client.sock)
-                if data.get(ACTION) == MSG:
-                    print('Got a message')
-                    self.gotData.emit()
+                client.m_r.rcv_message(client.sock)
+                if client.m_r.list_of_dicts:
+                    for element in client.m_r.list_of_dicts:
+                        # client.m_r.dict_message = element
+                        self.handle_rcv(element)
+                else:
+                    self.handle_rcv(client.m_r.dict_message)
+
+                # if data.get(ACTION) == MSG:
+                #     print('Got a message')
+                #     self.gotData.emit()
             except:
                 pass
             client.sock.settimeout(None)
             mute_.unlock()
+
+    def handle_rcv(self, data):
+        if data.get(ACTION) == MSG or data.get(ACTION) == IMG or data.get(ACTION) == IMG_PARTS:
+            print('Got a message')
+            self.gotData.emit(data)
 
 
 class ChatWindow(QtWidgets.QMainWindow):
@@ -126,6 +139,7 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.thread = QThread()
         self.auth = AuthReg()
         self.reg = AuthReg(auth=False)
+        self.got_img = pyqtSlot(dict)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -158,18 +172,33 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.thread.started.connect(self.receiver.poll)
         self.thread.start()
 
-    @pyqtSlot()
-    def thread_receiver_handle(self):
-        chat_name = client.m_r.dict_message[FROM]
-        doc = client.m_r.dict_message[MESSAGE]
-        # print(chat_name, doc
-        if self.selected_item_text == chat_name:
-            self.append_to_text(chat_name=chat_name, doc=doc)
-        client.client_db.session.rollback()
-        client.client_db.add_to_history(chat_name, time.ctime(),
-                                        doc, False)
+    @pyqtSlot(dict)
+    def thread_receiver_handle(self, dict_):
+        try:
+            action_ = dict_.get(ACTION)
+            if action_ == MSG:
+                chat_name = dict_[FROM]
+                doc = dict_[MESSAGE]
+                if self.selected_item_text == chat_name:
+                    self.append_to_text(chat_name=chat_name, doc=doc)
+                client.client_db.session.rollback()
+                client.client_db.add_to_history(chat_name, time.ctime(),
+                                                doc, False)
+            elif action_ == IMG or action_ == IMG_PARTS:
+                # print('Получили изображение')
+                # print(dict_)
+                img_msg = JIMMessage(dict_)
+                img_worker = ImageWorker(client.sock, img_msg, client.img_parts)
+                img_worker.handle(action_)
+                if img_worker.whole_received_img and \
+                   self.selected_item_text == img_worker.whole_received_img.get(USER_ID):
+                        pixmap = self.image_out_of_byte(PictureImage.base64_decode
+                                                        (img_worker.whole_received_img.get(IMG)))
+                        self.label.setPixmap(pixmap)
+        except Exception as e:
+            print(e)
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def fill_the_list(self, list_):
         for i in list_:
             self.listContacts.addItem(QtWidgets.QListWidgetItem("{}".format(i)))
@@ -212,6 +241,8 @@ class ChatWindow(QtWidgets.QMainWindow):
 
     def open_a_chat_window(self):
         try:
+            self.label.setPixmap(self.load_stub_img())
+            client.get_contact_img(self.selected_item_text)
             self.get_selected_list_item()
             self.enable_chat_elements()
             self.chatName.setText(self.selected_item_text)
@@ -372,6 +403,10 @@ class ChatWindow(QtWidgets.QMainWindow):
             pixmap = self.image_out_of_byte(img.data)
             self.myLabel.setPixmap(pixmap)
 
+    def load_stub_img(self):
+        img_path = os.path.join(os.getcwd(), 'system', 'gui', 'news.png')
+        pic = PictureImage(img_path, 150, 150)
+        return self.image_out_of_byte(pic.cropped_bytes_return())
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def start(self):
@@ -404,4 +439,3 @@ if __name__ == '__main__':
     window.start()
     window.show()
     sys.exit(app.exec_())
-

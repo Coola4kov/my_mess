@@ -74,10 +74,10 @@ class ImageWorker:
                                                                    USER_ID: self.message.dict_message[USER_ID],
                                                                    TIME: self.message.dict_message[TIME],
                                                                    IMG_SEQ: 0, IMG_DATA: []}})
-        self.message.response_message_create(self.sock, OK, True, 'Ok')
+        # self.message.response_message_create(self.sock, OK, True, 'Ok')
         time_keeper = Thread(target=self._img_parts_time_keeper)
         time_keeper.start()
-        print(self.img_parts)
+        # print(self.img_parts)
 
     def _img_parts_time_keeper(self):
         delete_list = []
@@ -100,7 +100,7 @@ class ImageWorker:
             else:
                 print("Части изображения не последовательны или количество элементов больше заданного количества")
         else:
-            print('id {} нет в системе')
+            print('id {} нет в системе'.format(id_))
         # self.message.response_message_create(self.sock, OK, False)
         if self.img_parts[id_][IMG_SEQ] == self.img_parts[id_][IMG_PCS]:
             self._build_whole_message(id_)
@@ -112,7 +112,7 @@ class ImageWorker:
     def _img_announce_send(self, img_len, contact_name):
         self.message.create_img_message(img_len, contact_name)
         id_ = self.message.dict_message[IMG_ID]
-        self.message.send_rcv_message(self.sock)
+        self.message.send_message(self.sock)
         return id_
 
     def _img_part_send(self, img_id, img_base64='', seq=1):
@@ -130,3 +130,6 @@ class ImageWorker:
         splitted_img = self._split_img(img_base64, img_len)
         for seq, part in enumerate(splitted_img):
             self._img_part_send(id_, part, seq+1)
+
+
+

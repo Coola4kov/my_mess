@@ -45,7 +45,7 @@ class Handler(Thread):
             self._msg_handle()
         elif self.action == GET_CONTACTS:
             self._get_contacts_handle()
-        elif self.action == GET_CONTACTS_IMG:
+        elif self.action == GET_CONTACT_IMG:
             print('Запрос изображений')
         elif self.action == ADD_CONTACT:
             self._add_del_contact_handle()

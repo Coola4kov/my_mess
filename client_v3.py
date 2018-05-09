@@ -171,6 +171,11 @@ class Client(metaclass=ClientVerifier):
         self.client_db.session.rollback()
         return self.client_db.get_all_contacts()
 
+    def get_contact_img(self, contact_name='basic_user'):
+        self.m.create_get_contact_img_message(contact_name)
+        self.m.send_message(self.sock)
+        # self.m.rcv_message(self.sock)
+
     def change_contact_global(self, username='MUSEUN', add=True):
         message_lock.acquire()
         self.m.create_change_contact_message(username, add=add)
@@ -212,16 +217,34 @@ class Client(metaclass=ClientVerifier):
             r, w, e = select.select([self.sock], [self.sock], [], wait)
             for sock_ in r:
                 self.m_r.rcv_message(sock_)
-                if self.m_r.dict_message[ACTION] == MSG:
-                    self.client_db.session.rollback()
-                    self.client_db.add_to_history(self.m_r.dict_message[FROM], time.ctime(),
-                                                  self.m_r.dict_message[MESSAGE], False)
-                    print(self.m_r.dict_message)
-                    queue.put(self.m_r.dict_message)
-                    self.m_r.clean_buffer()
-                elif self.m_r.dict_message[ACTION] == IMG or self.m_r.dict_message[ACTION] == IMG_PARTS:
-                    img_receiver = ImageWorker(self.sock, self.m_r, self.img_parts)
-                    img_receiver.handle(self.m_r.dict_message[ACTION])
+                if self.m_r.list_of_dicts:
+                    for dict_ in self.m_r.list_of_dicts:
+                        self.m_r.dict_message = dict_
+                        self.received_message_handle()
+                else:
+                    self.received_message_handle()
+                    # if self.m_r.dict_message[ACTION] == MSG:
+                    #     self.client_db.session.rollback()
+                    #     self.client_db.add_to_history(self.m_r.dict_message[FROM], time.ctime(),
+                    #                                   self.m_r.dict_message[MESSAGE], False)
+                    #     print(self.m_r.dict_message)
+                    #     # queue.put(self.m_r.dict_message)
+                    #     self.m_r.clean_buffer()
+                    # elif self.m_r.dict_message[ACTION] == IMG or self.m_r.dict_message[ACTION] == IMG_PARTS:
+                    #     img_receiver = ImageWorker(self.sock, self.m_r, self.img_parts)
+                    #     img_receiver.handle(self.m_r.dict_message[ACTION])
+
+    def received_message_handle(self):
+        if self.m_r.dict_message[ACTION] == MSG:
+            self.client_db.session.rollback()
+            self.client_db.add_to_history(self.m_r.dict_message[FROM], time.ctime(),
+                                          self.m_r.dict_message[MESSAGE], False)
+            print(self.m_r.dict_message)
+            # queue.put(self.m_r.dict_message)
+            self.m_r.clean_buffer()
+        elif self.m_r.dict_message[ACTION] == IMG or self.m_r.dict_message[ACTION] == IMG_PARTS:
+            img_receiver = ImageWorker(self.sock, self.m_r, self.img_parts)
+            img_receiver.handle(self.m_r.dict_message[ACTION])
 
     def cli_interact(self):
         while self.alive:
@@ -254,6 +277,9 @@ class Client(metaclass=ClientVerifier):
                 base64_to_send = input('>>Введите base64 код для отправки: ')
                 # img_sender = ImageWorker(self.sock, self.m, self.img_parts)
                 self.img_sender.img_send(base64_to_send)
+            elif action == 'get_img':
+                contact_name = input('>>Введите имя для получения изображения: ')
+                self.get_contact_img(contact_name)
             elif action == 'end':
                 self.alive = False
                 break

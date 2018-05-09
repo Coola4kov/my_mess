@@ -240,8 +240,9 @@ class JIMMessage(Message):
         self.dict_message = self._create_message(GET_CONTACTS)
         return self._end_of_creating()
 
-    def create_get_contact_img_message(self):
-        self.dict_message = self._create_message(GET_CONTACTS_IMG)
+    def create_get_contact_img_message(self, contact_name='basic_user'):
+        body = {USER_ID: contact_name}
+        self.dict_message = self._create_message(GET_CONTACT_IMG, **body)
         return self._end_of_creating()
 
     def create_change_contact_message(self, username='basic_user', add=True):
@@ -384,9 +385,10 @@ class JIMResponse(Message):
         return action
 
     def _get_contacts_img_check(self):
-        if self.dict_message.get(ACTION) == GET_CONTACTS_IMG \
-               and TIME in self.dict_message:
-            action = GET_CONTACTS_IMG
+        if self.dict_message.get(ACTION) == GET_CONTACT_IMG \
+               and TIME in self.dict_message\
+               and USER_ID in self.dict_message:
+            action = GET_CONTACT_IMG
         else:
             action = None
         return action
@@ -485,6 +487,7 @@ if __name__ == '__main__':
     # m.create_auth_reg_message('MUSEUN', 'test_lol', registration=True)
     # m.send_rcv_message(s)
     # print(m.dict_message)
-    print(m.create_img_message(3205, 'test'))
-    img_id = m.dict_message[IMG_ID]
-    print(m.create_img_parts_message('hjkasdfhjkasdhjkashjkas', 5, img_id))
+    # print(m.create_img_message(3205, 'test'))
+    # img_id = m.dict_message[IMG_ID]
+    # print(m.create_img_parts_message('hjkasdfhjkasdhjkashjkas', 5, img_id))
+    print(m.create_get_contact_img_message())

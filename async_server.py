@@ -55,6 +55,9 @@ class ServerProtocol(asyncio.Protocol):
             self._presence_handle()
         elif self.action == GET_CONTACTS:
             self._get_contacts_handle()
+        elif self.action == GET_CONTACT_IMG:
+            print('Запрос изображений')
+            self._get_contact_img_handle()
         elif self.action == ADD_CONTACT:
             self._add_del_contact_handle()
         elif self.action == DEL_CONTACT:
@@ -141,6 +144,15 @@ class ServerProtocol(asyncio.Protocol):
         for contact in contacts:
             contact_info_message.create_server_contact_list(contact.login)
             self.transport.write(contact_info_message.encoded_message)
+
+    def _get_contact_img_handle(self):
+        contact_name = self.message.dict_message[USER_ID]
+        client = self.server_db.request_client(contact_name)
+        if client:
+            img = self.server_db.get_client_img(contact_name)
+            img_message = JIMMessage()
+            img_sender = ImageWorker(self.socket, img_message, self.img_parts)
+            img_sender.img_send(img.img_base64, contact_name)
 
     def _add_del_contact_handle(self, add=True):
         new_user = self.message.dict_message[USER_ID]
