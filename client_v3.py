@@ -4,6 +4,7 @@ import socket
 import select
 import logging
 import sqlalchemy.exc
+import mongoengine
 
 from threading import Thread, Lock
 from queue import Queue
@@ -13,9 +14,11 @@ from system.metaclasses import ClientVerifier
 from system.errors import WrongPortError
 from system.image_worker import ImageWorker
 from system.db.client_db_worker import ClientWorker
+from system.db.mng_db_test import Contacts
 from system.config import *
 
 log_client = logging.getLogger('messenger.client')
+mongoengine.connect('test')
 log_debug = logging.getLogger('messenger.debug')
 message_lock = Lock()
 
@@ -163,6 +166,7 @@ class Client(metaclass=ClientVerifier):
 
     def add_contact_to_db(self, dict_message):
         try:
+            # Contacts(dict_message[USER_ID]).save()
             self.client_db.add_contact(dict_message[USER_ID])
         except sqlalchemy.exc.IntegrityError:
             print('Клиент уже есть')

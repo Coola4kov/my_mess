@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw
-from PIL.ImageQt import ImageQt
+# from PIL.ImageQt import ImageQt
 from threading import Thread
 
 import io

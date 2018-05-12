@@ -192,6 +192,7 @@ class ChatWindow(QtWidgets.QMainWindow):
                 img_worker.handle(action_)
                 if img_worker.whole_received_img and \
                    self.selected_item_text == img_worker.whole_received_img.get(USER_ID):
+
                         pixmap = self.image_out_of_byte(PictureImage.base64_decode
                                                         (img_worker.whole_received_img.get(IMG)))
                         self.label.setPixmap(pixmap)
