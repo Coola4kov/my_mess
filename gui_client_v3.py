@@ -144,26 +144,36 @@ class ChatWindow(QtWidgets.QMainWindow):
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @pyqtSlot()
-    def set_qt_elements_enabled(self, contacts=True, chat=False, actions=True, smiles=False):
-        elemets = []
+    def set_qt_elements_enabled(self, contacts=True, chat=False,
+                                actions=True, style=True, smiles=False):
+        elements = []
         if contacts:
             contacts_button = [self.pushDelete, self.pushAdd]
-            elemets += contacts_button
+            elements += contacts_button
         if chat:
             chat_buttons = [self.pushSend, self.pushCancle]
-            elemets += chat_buttons
+            elements += chat_buttons
         if actions:
-            actions_ = [self.actionItalic, self.actionBold, self.actionUlined, self.actionOpen]
-            elemets += actions_
+            # actions_ = [self.actionItalic, self.actionBold, self.actionUlined, self.actionOpen]
+            actions_ = [self.actionOpen]
+            elements += actions_
+        if style:
+            styles_ = [self.italicButton, self.boldButton, self.uButton]
+            elements += styles_
         if smiles:
-            smiles_ = [self.actionSmile, self.actionCrazy, self.actionSad]
-            elemets += smiles_
-        for el in elemets:
+            # smiles_ = [self.actionSmile, self.actionCrazy, self.actionSad]
+            smiles_ = [self.smileButton, self.surprButton, self.sadButton]
+            elements += smiles_
+        for el in elements:
             el.setEnabled(True)
+
+    @pyqtSlot()
+    def display_my_name(self):
+        self.myName.setText(self.auth.user)
 
     def enable_chat_elements(self):
         self.textChatEdit.setReadOnly(False)
-        self.set_qt_elements_enabled(False, True, False, True)
+        self.set_qt_elements_enabled(False, True, False, False, True)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -199,7 +209,8 @@ class ChatWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(e)
 
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def fill_the_list(self, list_):
         for i in list_:
             self.listContacts.addItem(QtWidgets.QListWidgetItem("{}".format(i)))
@@ -417,18 +428,25 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.auth.notifier.rejected.connect(self.receiver_thread_start)
         self.receiver.gotData.connect(self.thread_receiver_handle)
         self.auth.Signal.connect(self.set_qt_elements_enabled)
+        self.auth.Signal.connect(self.display_my_name)
         self.listContacts.itemDoubleClicked.connect(self.open_a_chat_window)
         self.listContacts.itemClicked.connect(self.get_selected_list_item)
         self.pushAdd.clicked.connect(self.add_item_to_list)
         self.pushDelete.clicked.connect(self.del_item_from_list)
         self.pushSend.clicked.connect(self.send_message)
         self.pushCancle.clicked.connect(self.textChatEdit.clear)
-        self.actionItalic.triggered.connect(self.make_italic)
-        self.actionBold.triggered.connect(self.make_bold)
-        self.actionUlined.triggered.connect(self.make_under)
-        self.actionSmile.triggered.connect(self.reg_smile)
-        self.actionSad.triggered.connect(self.sad_smile)
-        self.actionCrazy.triggered.connect(self.crz_smile)
+        self.italicButton.clicked.connect(self.make_italic)
+        self.boldButton.clicked.connect(self.make_bold)
+        self.uButton.clicked.connect(self.make_under)
+        self.smileButton.clicked.connect(self.reg_smile)
+        self.sadButton.clicked.connect(self.sad_smile)
+        self.surprButton.clicked.connect(self.crz_smile)
+        # self.actionItalic.triggered.connect(self.make_italic)
+        # self.actionBold.triggered.connect(self.make_bold)
+        # self.actionUlined.triggered.connect(self.make_under)
+        # self.actionSmile.triggered.connect(self.reg_smile)
+        # self.actionSad.triggered.connect(self.sad_smile)
+        # self.actionCrazy.triggered.connect(self.crz_smile)
         self.actionOpen.triggered.connect(self.show_open_f_dialog)
 
 

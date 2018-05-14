@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Авторизация</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>android-icon-36x36.png</normaloff>android-icon-36x36.png</iconset>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="enabled">
     <bool>true</bool>
