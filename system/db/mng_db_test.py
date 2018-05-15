@@ -25,9 +25,9 @@ class Db:
         subprocess.Popen([path_server, '--dbpath', path_db])
         mongoengine.connect(name)
 
-    @staticmethod
-    def add_contact(name, img_base64=None):
-        Contacts(name=name, img_base64=img_base64).save()
+    def add_contact(self, name, img_base64=None):
+        if not self.check_contact(name):
+            Contacts(name=name, img_base64=img_base64).save()
 
     @staticmethod
     def add_img(name, img_base64):
@@ -38,8 +38,25 @@ class Db:
         new_msg = Messages(to_from=to_from, datetime=datetime, message=msg)
         Contacts.objects(name=name).update_one(push__msg=new_msg)
 
-    def get_contacts(self):
-        pass
+    @staticmethod
+    def check_contact(name):
+        if Contacts.objects(name=name):
+            here = True
+        else:
+            here = False
+        return here
+
+    @staticmethod
+    def get_contacts():
+        return [contact.name for contact in Contacts.objects]
+
+    def get_last_messages(self, name):
+        if self.check_contact(name):
+            msgs = Contacts.objects(name=name).get().msg[-10:]
+            msg_list = [msg_.message for msg_ in msgs]
+        else:
+            msg_list = None
+        return msg_list
 
 
 if __name__ == '__main__':
@@ -53,6 +70,10 @@ if __name__ == '__main__':
     # db.add_img('MUSEUN', b'1234567890')
     #
     # db.add_msg(to_from=True, name='MUSEUN', datetime=time.ctime(), msg='sdfg, this is test')
-    for element in Contacts.objects:
-        for msg in element.msg[-10:]:
-            print(msg.datetime, msg.message)
+    db.add_contact('lol')
+    print(db.check_contact('lol'))
+    print(db.get_contacts())
+    print(db.get_last_messages('MUSEUN'))
+    # for element in Contacts.objects:
+    #     for msg in element.msg[-10:]:
+    #         print(msg.datetime, msg.message)
