@@ -1,6 +1,7 @@
 import pymongo
 import mongoengine
 import time
+import psutil
 import os
 import subprocess
 
@@ -50,6 +51,13 @@ class Db:
     def get_contacts():
         return [contact.name for contact in Contacts.objects]
 
+    def del_contacts(self, name):
+        if self.check_contact(name):
+            del_ = Contacts.objects(name=name).delete()
+        else:
+            del_ = False
+        return del_
+
     def get_last_messages(self, name):
         if self.check_contact(name):
             msgs = Contacts.objects(name=name).get().msg[-10:]
@@ -73,7 +81,10 @@ if __name__ == '__main__':
     db.add_contact('lol')
     print(db.check_contact('lol'))
     print(db.get_contacts())
+    print(db.del_contacts('ueu'))
     print(db.get_last_messages('MUSEUN'))
+
+
     # for element in Contacts.objects:
     #     for msg in element.msg[-10:]:
     #         print(msg.datetime, msg.message)
