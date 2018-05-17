@@ -27,7 +27,7 @@ class Room(Document):
 
 
 class Sockets(Document):
-    client = ReferenceField(Client, required=True, reverse_delete_rule=1)
+    client = ReferenceField(Client, required=True)
     fd = IntField(unique=True, required=True)
 
 
@@ -176,9 +176,18 @@ class ServerDb:
             id_ = None
         return id_
 
-    def drop_socket(self, login=''):
-        if self.check_client(login):
-            deleted = Sockets.objects(client=self.get_client_id(login, False)).delete()
+    def drop_socket(self, login='', fd=0):
+        if login:
+            if self.check_client(login):
+                deleted = Sockets.objects(client=self.get_client_id(login, False)).delete()
+            else:
+                deleted = False
+        elif fd:
+            socket_ = Sockets.objects(fd=fd)
+            if socket_:
+                deleted = socket_.delete()
+            else:
+                deleted = False
         else:
             deleted = False
         return deleted

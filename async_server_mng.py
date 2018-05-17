@@ -2,6 +2,8 @@ import asyncio
 import functools
 import time
 
+from threading import Thread
+
 from system.jim_v2 import JIMResponse, JIMMessage, get_safe_hash
 from system.image_worker import ImageWorker
 from system.db.serv_mongo_db import ServerDb
@@ -13,14 +15,22 @@ class ServerProtocol(asyncio.Protocol):
         self.server_db = db
         self.img_parts = img_parts
         self.clients = clients
+        self.timer = 0
+        self.stop_timer = False
+        # self.loop_timer = asyncio.get_event_loop()
         self.action = None
         self.message = None
         self.socket = None
+        self.fd = None
         self.transport = None
 
     def connection_made(self, transport):
         self.socket = transport.get_extra_info('socket')
+        self.fd = self.socket.fileno()
+        self.timer = asyncio.get_event_loop().time()
         self.transport = transport
+        # self.loop_timer.run_until_complete(self.timer_check())
+        asyncio.ensure_future(self.timer_check())
 
     def data_received(self, data):
         print(data)
@@ -44,7 +54,22 @@ class ServerProtocol(asyncio.Protocol):
         self.handle_request()
 
     def connection_lost(self, exc):
-        self.clients.remove(self.socket)
+        print('Соединение закрыто')
+        # self.loop_timer.stop()
+        if not self.stop_timer:
+            self.clients.remove(self.socket)
+        self.server_db.drop_socket(fd=self.fd)
+
+    async def timer_check(self):
+        while not self.stop_timer:
+            # print('time_check')
+            # print(self.clients)
+            await asyncio.sleep(10)
+            current_time = asyncio.get_event_loop().time()
+            if current_time - self.timer > 30:
+                self.clients.remove(self.socket)
+                self.stop_timer = True
+                self.transport.close()
 
     def handle_request(self):
         if self.action == AUTH:
@@ -86,6 +111,7 @@ class ServerProtocol(asyncio.Protocol):
             client_hash = self.message.dict_message[USER][PASSWORD]
             if client.get().hash == client_hash:
                 print('{} авторизован'.format(client_name))
+                self.server_db.add_socket(client_name, self.socket.fileno())
                 self.clients.append(self.socket)
                 self.message.response_message_create(code=OK, send_message=False)
             else:
@@ -105,9 +131,7 @@ class ServerProtocol(asyncio.Protocol):
                         for sock_online in self.clients:
                             if sock_fn == sock_online.fileno():
                                 self.message.send_message(sock_online)
-                                # self.transport.sendto(self.message.encoded_message, sock_online)
         else:
-            # print(self.message.dict_message)
             sock_fn = self.server_db.get_socket_by_client(self.message.dict_message[TO])
             # for sock_fn in sockets:
             for sock_online in self.clients:
@@ -119,6 +143,7 @@ class ServerProtocol(asyncio.Protocol):
         self.transport.write(self.message.encoded_message)
 
     def _presence_handle(self):
+        self.timer = asyncio.get_event_loop().time()
         username = self.message.dict_message[USER][ACCOUNT_NAME]
         client = self.server_db.request_client(username)
         if client is None:
@@ -128,7 +153,6 @@ class ServerProtocol(asyncio.Protocol):
             self.server_db.add_to_history(username,
                                           time.time(),
                                           self.socket.getpeername()[0])
-            self.server_db.add_socket(username, self.socket.fileno())
             self.message.response_message_create(self.socket, OK, send_message=False)
         self.transport.write(self.message.encoded_message)
 
@@ -183,10 +207,8 @@ class ServerProtocol(asyncio.Protocol):
         # client = self.server_db.request_client(client_name)
         client = self.server_db.request_client(client_name)
         if client is None:
-            # self.server_db.add_client(client_name, "Yep, i'm here")
             hash_ = get_safe_hash(pswd, SALT)
             self.server_db.add_client(client_name, hash_, "Yep, i'm here")
-            # self.server_db.register_new_hash(client_login=client_name, hash_=hash_)
             self.message.response_message_create(OK, send_message=False)
         else:
             self.message.response_message_create(code=CONFLICT, with_message=True,
@@ -225,6 +247,19 @@ class ServerProtocol(asyncio.Protocol):
                                    img_worker.whole_received_img[IMG])
 
 
+async def probe_message_send(clients_):
+    m = JIMMessage()
+    while True:
+        cli_copy = clients_[:]
+        await asyncio.sleep(5)
+        m.create_probe_message()
+        for sock_ in cli_copy:
+            try:
+                m.send_message(sock_)
+                print('probe sent')
+            except OSError:
+                pass
+
 def server_run():
     server_db = ServerDb()
     server_db.drop_sockets()
@@ -238,10 +273,14 @@ def server_run():
 
     # Serve requests until Ctrl+C is pressed
     print('Serving on {}'.format(server.sockets[0].getsockname()))
+
+    probe_loop = asyncio.get_event_loop()
+    probe_loop.run_until_complete(probe_message_send(clients))
+
     try:
         loop.run_forever()
     except KeyboardInterrupt:
-        pass
+        probe_loop.stop()
 
     server.close()
     loop.run_until_complete(server.wait_closed())

@@ -9,9 +9,11 @@ import sys
 import re
 import os
 import time
+import socket
 
 from system.decorators import mute
 from system.config import *
+from system.errors import ClosedSocketError
 from system.image_worker import PictureImage, ImageWorker
 from system.jim_v2 import JIMMessage
 
@@ -112,18 +114,18 @@ class ReceiverHandler(QObject):
                         self.handle_rcv(element)
                 else:
                     self.handle_rcv(client.m_r.dict_message)
-
-                # if data.get(ACTION) == MSG:
-                #     print('Got a message')
-                #     self.gotData.emit()
-            except:
+            except socket.timeout:
                 pass
+            except ClosedSocketError:
+                sys.exit()
+
             client.sock.settimeout(None)
             mute_.unlock()
 
     def handle_rcv(self, data):
-        if data.get(ACTION) == MSG or data.get(ACTION) == IMG or data.get(ACTION) == IMG_PARTS:
-            print('Got a message')
+        if data.get(ACTION) == MSG or data.get(ACTION) == IMG or data.get(ACTION) == IMG_PARTS \
+                or data.get(ACTION) == PROBE:
+            # print('Got a message')
             self.gotData.emit(data)
 
 
@@ -154,8 +156,8 @@ class ChatWindow(QtWidgets.QMainWindow):
             chat_buttons = [self.pushSend, self.pushCancle]
             elements += chat_buttons
         if actions:
-            # actions_ = [self.actionItalic, self.actionBold, self.actionUlined, self.actionOpen]
-            actions_ = [self.actionOpen]
+            actions_ = [self.actionItalic, self.actionBold, self.actionUlined, self.actionOpen]
+            # actions_ = [self.actionOpen]
             elements += actions_
         if style:
             styles_ = [self.italicButton, self.boldButton, self.uButton]
@@ -206,6 +208,11 @@ class ChatWindow(QtWidgets.QMainWindow):
                         pixmap = self.image_out_of_byte(PictureImage.base64_decode
                                                         (img_worker.whole_received_img.get(IMG)))
                         self.label.setPixmap(pixmap)
+            elif action_ == PROBE:
+                mute_.lock()
+                client.m.create_presence_message(self.auth.user)
+                client.m.send_rcv_message(client.sock)
+                mute_.unlock()
         except Exception as e:
             print(e)
 
@@ -318,7 +325,7 @@ class ChatWindow(QtWidgets.QMainWindow):
         mute_.unlock()
         self.append_to_text(doc=doc)
 
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def change_style(self, style='italic'):
         if style == 'italic':
@@ -441,12 +448,9 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.smileButton.clicked.connect(self.reg_smile)
         self.sadButton.clicked.connect(self.sad_smile)
         self.surprButton.clicked.connect(self.crz_smile)
-        # self.actionItalic.triggered.connect(self.make_italic)
-        # self.actionBold.triggered.connect(self.make_bold)
-        # self.actionUlined.triggered.connect(self.make_under)
-        # self.actionSmile.triggered.connect(self.reg_smile)
-        # self.actionSad.triggered.connect(self.sad_smile)
-        # self.actionCrazy.triggered.connect(self.crz_smile)
+        self.actionItalic.triggered.connect(self.make_italic)
+        self.actionBold.triggered.connect(self.make_bold)
+        self.actionUlined.triggered.connect(self.make_under)
         self.actionOpen.triggered.connect(self.show_open_f_dialog)
 
 

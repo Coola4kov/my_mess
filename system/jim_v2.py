@@ -163,7 +163,7 @@ class Message:
         Получаем ответ от сервера, если он не ответил, возвратится пустая строка
         """
         self.encoded_message = sock.recv(32768)
-        print(self.encoded_message)
+        # print(self.encoded_message)
         self.list_of_dicts = []
         if not self.encoded_message:
             raise ClosedSocketError(sock)
