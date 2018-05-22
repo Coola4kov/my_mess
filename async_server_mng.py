@@ -1,8 +1,7 @@
 import asyncio
 import functools
+import subprocess
 import time
-
-from threading import Thread
 
 from system.jim_v2 import JIMResponse, JIMMessage, get_safe_hash
 from system.image_worker import ImageWorker
@@ -186,11 +185,10 @@ class ServerProtocol(asyncio.Protocol):
         else:
             client = self.server_db.get_client_by_socket(self.socket.fileno())
             if client:
-                if new_user not in self.server_db.get_all_contacts(client):
-                    if add:
-                        self.server_db.edit_contacts(client, new_user)
-                    else:
-                        self.server_db.del_contact(client, new_user, False)
+                contacts = self.server_db.get_all_contacts(client)
+                if (add and new_user not in contacts)\
+                        or (not add and new_user in contacts):
+                    self.server_db.edit_contacts(client, new_user, add)
                     self.message.response_message_create(OK, with_message=False, send_message=False)
                 else:
                     self.message.response_message_create(WRONG_REQUEST, with_message=False, send_message=False)

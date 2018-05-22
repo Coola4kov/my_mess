@@ -1,5 +1,3 @@
-from client_v3 import Client
-
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 from PyQt5.QtCore import QObject, QThread, pyqtSlot, pyqtSignal, QMutex, Qt, QByteArray, QBuffer
@@ -11,6 +9,7 @@ import os
 import time
 import socket
 
+from client_v3 import Client
 from system.decorators import mute
 from system.config import *
 from system.errors import ClosedSocketError
@@ -176,6 +175,11 @@ class ChatWindow(QtWidgets.QMainWindow):
     def enable_chat_elements(self):
         self.textChatEdit.setReadOnly(False)
         self.set_qt_elements_enabled(False, True, False, False, True)
+
+    def login_actions_turn(self, act=False):
+        actions_ = [self.actionLogin, self.actionRegister]
+        for el in actions_:
+            el.setEnabled(act)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -435,6 +439,7 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.auth.notifier.rejected.connect(self.receiver_thread_start)
         self.receiver.gotData.connect(self.thread_receiver_handle)
         self.auth.Signal.connect(self.set_qt_elements_enabled)
+        self.auth.Signal.connect(self.login_actions_turn)
         self.auth.Signal.connect(self.display_my_name)
         self.listContacts.itemDoubleClicked.connect(self.open_a_chat_window)
         self.listContacts.itemClicked.connect(self.get_selected_list_item)

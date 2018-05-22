@@ -3,7 +3,9 @@ from mongoengine import EmbeddedDocument, Document, BooleanField, \
     StringField, BinaryField, EmbeddedDocumentField, \
     ListField, ReferenceField, ObjectIdField, IntField, connect
 
+import subprocess
 import time
+import os
 
 
 class Visit(EmbeddedDocument):
@@ -99,8 +101,9 @@ class ServerDb:
                 owner.update_one(add_to_set__contacts=contact.get().id)
                 contact.update_one(add_to_set__owners=owner.get().id)
             else:
-                owner.update_one(pull__contacts=contact.get().id)
-                contact.update_one(pull__owners=owner.get().id)
+                contact_id = contact.get().id
+                print(owner.update_one(pull__contacts=contact_id))
+                print(contact.update_one(pull__owners=owner.get().id))
             added = True
         else:
             added = False
@@ -121,6 +124,13 @@ class ServerDb:
         else:
             contacts = []
         return contacts
+
+    def search_contact_ilike(self, login_='',contact_ilike=''):
+        owner_id = Client.objects.get(login=login_).id
+        contacts_ = Client.objects.filter(owners=owner_id, login__icontains=contact_ilike)
+        return [contact.login for contact in contacts_]
+        #  clients_ = Client.objects.filter(login__icontains=contact_ilike)
+        # contacts_ = Client.objects(login=login_).filter()
 
     # History
     def add_to_history(self, login, login_time, ip_add):
@@ -197,6 +207,7 @@ class ServerDb:
         Sockets.drop_collection()
 
 
+
 if __name__ == '__main__':
     server = ServerDb()
     # Client.drop_collection()
@@ -218,5 +229,7 @@ if __name__ == '__main__':
     # print(server.get_socket_by_client('test'))
     # print(server.get_client_by_socket(123))
     print(server.get_hash('MAMA'))
-    print(server.add_socket('MAMA', 1234))
+    # print(server.add_socket('MAMA', 1234))
     # print(server.drop_socket('MAMA'))
+    # server.edit_contacts('test', 'MAMA', False)
+    print(server.search_contact_ilike('test', 'A'))
